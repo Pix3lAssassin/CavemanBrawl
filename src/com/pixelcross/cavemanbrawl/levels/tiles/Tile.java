@@ -1,8 +1,5 @@
 package com.pixelcross.cavemanbrawl.levels.tiles;
 
-import java.awt.Graphics;
-import java.awt.image.BufferedImage;
-
 import javafx.scene.canvas.GraphicsContext;
 import javafx.scene.image.Image;
 

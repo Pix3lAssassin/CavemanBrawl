@@ -11,16 +11,17 @@ public abstract class Creature extends Entity {
 	public static final int DEFAULT_CREATURE_WIDTH = 64, DEFAULT_CREATURE_HEIGHT = 64;
 	
 	protected int health;
-	protected float speed;
-	protected float xMove, yMove;
+	protected double speed;
+	protected double xMove, yMove;
 	protected Level currentLevel;
 
-	public Creature(Level level, float x, float y, int width, int height) {
+	public Creature(Level level, double x, double y, int width, int height) {
 		super(x, y, width, height);
 		health = DEFAULT_HEALTH;
 		speed = DEFAULT_SPEED;
 		xMove = 0;
 		yMove = 0;
+		currentLevel = level;
 	}
 
 	public void move() {
@@ -28,7 +29,7 @@ public abstract class Creature extends Entity {
 		moveY();
 	}
 	
-	public void moveX() {
+	protected void moveX() {
 		if(xMove > 0) {//Moving right			
 			int tx = (int) (x + xMove + bounds.x + bounds.width) / Tile.TILEWIDTH;
 			
@@ -50,7 +51,7 @@ public abstract class Creature extends Entity {
 		}
 	}
 	
-	public void moveY() {
+	protected void moveY() {
 		if(yMove > 0) {//Moving down			
 			int ty = (int) (y + yMove + bounds.y + bounds.height) / Tile.TILEHEIGHT;
 			
@@ -74,27 +75,20 @@ public abstract class Creature extends Entity {
 	}
 	
 	protected boolean collisionWithTile(int x, int y) {
-		return currentLevel.getCurrentRoom().getTile(x, y).isSolid();
+		Tile tile = currentLevel.getCurrentRoom().getTile(1, x, y);
+		if (tile != null) {
+			return tile.isSolid();
+		} else {
+			return false;
+		}
 	}	
 		
-	public void setCurrentLevel(Level currentLevel) {
-		this.currentLevel = currentLevel;
-	}
-
-	public float getxMove() {
+	public double getxMove() {
 		return xMove;
 	}
 
-	public void setxMove(float xMove) {
-		this.xMove = xMove;
-	}
-
-	public float getyMove() {
+	public double getyMove() {
 		return yMove;
-	}
-
-	public void setyMove(float yMove) {
-		this.yMove = yMove;
 	}
 
 	public int getHealth() {
@@ -105,12 +99,8 @@ public abstract class Creature extends Entity {
 		this.health = health;
 	}
 
-	public float getSpeed() {
+	public double getSpeed() {
 		return speed;
-	}
-
-	public void setSpeed(float speed) {
-		this.speed = speed;
 	}
 	
 }

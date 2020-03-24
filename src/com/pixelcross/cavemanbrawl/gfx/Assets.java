@@ -1,7 +1,5 @@
 package com.pixelcross.cavemanbrawl.gfx;
 
-import java.awt.image.BufferedImage;
-
 import javafx.scene.image.Image;
 
 public class Assets {

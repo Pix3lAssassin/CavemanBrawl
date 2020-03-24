@@ -1,6 +1,5 @@
 package com.pixelcross.cavemanbrawl.entities.creatures;
 
-import java.awt.Graphics;
 import java.util.ArrayList;
 
 import com.pixelcross.cavemanbrawl.gfx.Assets;
@@ -12,9 +11,9 @@ import javafx.scene.paint.Color;
 
 public class Player extends Creature {
 
-	ArrayList<String> input;
+	private ArrayList<String> input;
 	
-	public Player(Level currentLevel, ArrayList<String> input, float x, float y) {
+	public Player(Level currentLevel, ArrayList<String> input, double x, double y) {
 		super(currentLevel, x, y, Creature.DEFAULT_CREATURE_WIDTH, Creature.DEFAULT_CREATURE_HEIGHT);
 		
 		bounds.x = 16;
@@ -31,7 +30,7 @@ public class Player extends Creature {
 		move();
 	}
 
-	public void getInput() {
+	private void getInput() {
 		xMove = 0;
 		yMove = 0;
 		
@@ -54,4 +53,7 @@ public class Player extends Creature {
 		gc.strokeRect(x + bounds.x - camera.getxOffset(), y + bounds.y - camera.getyOffset(), bounds.width, bounds.height);
 	}
 
+	public void setCurrentLevel(Level level) {
+		currentLevel = level;
+	}
 }

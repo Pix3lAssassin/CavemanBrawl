@@ -1,19 +1,14 @@
 package com.pixelcross.cavemanbrawl.main;
 
-import java.util.ArrayList;
-
+import com.pixelcross.cavemanbrawl.gfx.Assets;
 import com.pixelcross.cavemanbrawl.states.GameState;
 import com.pixelcross.cavemanbrawl.states.StateManager;
 
 import javafx.animation.AnimationTimer;
 import javafx.application.Application;
-import javafx.event.EventHandler;
 import javafx.scene.Group;
-import javafx.scene.Scene;
 import javafx.scene.canvas.Canvas;
 import javafx.scene.canvas.GraphicsContext;
-import javafx.scene.input.KeyCode;
-import javafx.scene.input.KeyEvent;
 import javafx.scene.paint.Color;
 import javafx.scene.text.Font;
 import javafx.scene.text.FontWeight;
@@ -32,6 +27,7 @@ public class CavemanBrawlApp extends Application {
 		primaryStage.setTitle("Caveman Brawl");
 		
 		Group root = new Group();
+		Assets.init();
 		GameState gs = new GameState(root);
 		primaryStage.setScene(gs);
 
@@ -40,10 +36,8 @@ public class CavemanBrawlApp extends Application {
 		Canvas canvas = new Canvas(WIDTH, HEIGHT);
 		root.getChildren().add(canvas);
 		
-		ArrayList<String> input = new ArrayList<String>();
-		
 		GraphicsContext gc = canvas.getGraphicsContext2D();
-				
+		
 		AnimationTimer timer = new AnimationTimer() {
 			int updatesPerSec = 30;
 			long timePerUpdate = 1000000000  / updatesPerSec;
