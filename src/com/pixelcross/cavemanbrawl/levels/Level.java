@@ -29,7 +29,7 @@ public class Level {
 	}
 	
 	public void update() {
-		
+		currentRoom.update();
 	}
 	
 	public void render(GraphicsContext gc, double interpolation, GameCamera camera) {

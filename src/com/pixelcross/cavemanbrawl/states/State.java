@@ -14,6 +14,7 @@ public abstract class State extends Scene {
 
 	protected ArrayList<String> input;
 	protected Point2D.Double mouse;
+	protected boolean mouseDown;
 	
 	public State(Parent root) {
 		super(root);
@@ -27,13 +28,15 @@ public abstract class State extends Scene {
 				 
                 // only add once... prevent duplicates
                 if ( !input.contains(code) )
-                    input.add( code );				
+                    input.add( code );	
+                keyPressed(e);
 			}
 		});
 		this.setOnKeyReleased(new EventHandler<KeyEvent>() {
 			public void handle(KeyEvent e) {
                 String code = e.getCode().toString();
                 input.remove( code );
+                keyReleased(e);
 			}
 		});
 		this.setOnMouseMoved(new EventHandler<MouseEvent>() {
@@ -44,14 +47,14 @@ public abstract class State extends Scene {
 		});
 		this.setOnMousePressed(new EventHandler<MouseEvent>() {
 			public void handle(MouseEvent e) {
-				mouse.x = e.getX();
-				mouse.y = e.getY();
+				mouseDown = true;
+				mousePressed(e);
 			}
 		});
 		this.setOnMouseReleased(new EventHandler<MouseEvent>() {
 			public void handle(MouseEvent e) {
-				mouse.x = e.getX();
-				mouse.y = e.getY();
+				mouseDown = false;
+				mouseReleased(e);
 			}
 		});
 	}
@@ -60,4 +63,12 @@ public abstract class State extends Scene {
 	
 	public abstract void render(GraphicsContext gc, double interpolation);
 
+	protected void mousePressed(MouseEvent e) {}
+	
+	protected void mouseReleased(MouseEvent e) {}
+		
+	protected void keyPressed(KeyEvent e) {}
+	
+	protected void keyReleased(KeyEvent e) {}
+		
 }

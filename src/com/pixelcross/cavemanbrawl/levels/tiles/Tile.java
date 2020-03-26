@@ -12,7 +12,7 @@ public class Tile {
 	public static Tile rockTile = new RockTile(1);
 	
 	//CLASS
-	public static final int TILEWIDTH = 64, TILEHEIGHT = 64;
+	public static final int TILEWIDTH = 32, TILEHEIGHT = 32;
 	
 	protected Image texture;
 	protected final int id;

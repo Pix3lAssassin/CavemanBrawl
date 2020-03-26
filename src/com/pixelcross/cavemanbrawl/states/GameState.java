@@ -19,7 +19,7 @@ public class GameState extends State {
 	public GameState(Parent root) {
 		super(root);
 		camera = new GameCamera(this, 0, 0, CavemanBrawlApp.WIDTH, CavemanBrawlApp.HEIGHT);
-		level = new Level(camera, 6, 20, 15);
+		level = new Level(camera, 6, 80, 60);
 		player = new Player(level, input, 100, 100);
 	}
 

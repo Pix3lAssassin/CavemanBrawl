@@ -7,7 +7,7 @@ import com.pixelcross.cavemanbrawl.levels.tiles.Tile;
 public abstract class Creature extends Entity {
 
 	public static final int DEFAULT_HEALTH = 10;
-	public static final int DEFAULT_SPEED = 3;
+	public static final int DEFAULT_SPEED = 6;
 	public static final int DEFAULT_CREATURE_WIDTH = 64, DEFAULT_CREATURE_HEIGHT = 64;
 	
 	protected int health;

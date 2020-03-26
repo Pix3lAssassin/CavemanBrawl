@@ -17,9 +17,9 @@ public class Player extends Creature {
 		super(currentLevel, x, y, Creature.DEFAULT_CREATURE_WIDTH, Creature.DEFAULT_CREATURE_HEIGHT);
 		
 		bounds.x = 16;
-		bounds.y = 32;
+		bounds.y = 24;
 		bounds.width = 32;
-		bounds.height = 32;
+		bounds.height = 40;
 		
 		this.input = input;
 	}
@@ -28,21 +28,20 @@ public class Player extends Creature {
 	public void update() {
 		getInput();
 		move();
+		yMove *= 0.7;
+		xMove *= 0.7;
 	}
 
 	private void getInput() {
-		xMove = 0;
-		yMove = 0;
-		
-		if(input.contains("UP"))
-			yMove = -speed;
-		if(input.contains("DOWN"))
-			yMove = speed;
-		if(input.contains("LEFT"))
-			xMove = -speed;
-		if(input.contains("RIGHT"))
-			xMove = speed;
-		
+		double speedChange = speed/3;
+		if(input.contains("UP") && Math.abs(yMove) < speed)
+			yMove -= speedChange;
+		if(input.contains("DOWN") && Math.abs(yMove) < speed)
+			yMove += speedChange;
+		if(input.contains("LEFT") && Math.abs(xMove) < speed)
+			xMove -= speedChange;
+		if(input.contains("RIGHT") && Math.abs(xMove) < speed)
+			xMove += speedChange;	
 	}
 	
 	@Override
