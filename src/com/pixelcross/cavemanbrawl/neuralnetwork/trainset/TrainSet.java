@@ -3,7 +3,12 @@ package com.pixelcross.cavemanbrawl.neuralnetwork.trainset;
 import java.util.ArrayList;
 import java.util.Arrays;
 
+import com.pixelcross.cavemanbrawl.neuralnetwork.fullyconnectednetwork.Network;
 import com.pixelcross.cavemanbrawl.neuralnetwork.fullyconnectednetwork.NetworkTools;
+import com.pixelcross.cavemanbrawl.neuralnetwork.parser.Attribute;
+import com.pixelcross.cavemanbrawl.neuralnetwork.parser.Node;
+import com.pixelcross.cavemanbrawl.neuralnetwork.parser.Parser;
+import com.pixelcross.cavemanbrawl.neuralnetwork.parser.ParserTools;
 
 /**
  * Created by Luecx on 09.08.2017.
@@ -37,23 +42,50 @@ public class TrainSet {
         }else return this;
     }
 
-    public static void main(String[] args) {
-        TrainSet set = new TrainSet(3,2);
+    public void saveTrainSet(String fileName) throws Exception {
+        Parser p = new Parser();
+        p.create(fileName);
+        Node root = p.getContent();
+        Node trainSet = new Node("TrainSet");
+        Node set = new Node("Sets");
+        trainSet.addAttribute(new Attribute("setSize", "" + data.size()));
+        trainSet.addAttribute(new Attribute("inputSize", "" + INPUT_SIZE));
+        trainSet.addAttribute(new Attribute("outputSize", "" + OUTPUT_SIZE));
+        trainSet.addChild(set);
+        root.addChild(trainSet);
+        for (int setNum = 1; setNum < data.size(); setNum++) {
 
-        for(int i = 0; i < 8; i++) {
-            double[] a = new double[3];
-            double[] b = new double[2];
-            for(int k = 0; k < 3; k++) {
-                a[k] = (double)((int)(Math.random() * 10)) / (double)10;
-                if(k < 2) {
-                    b[k] = (double)((int)(Math.random() * 10)) / (double)10;
-                }
-            }
-            set.addData(a,b);
+            Node c = new Node("Set" + setNum);
+            set.addChild(c);
+
+            c.addAttribute("input", Arrays.toString(data.get(setNum)[0]));
+            c.addAttribute("output", Arrays.toString(data.get(setNum)[1]));
+
         }
+        p.close();
+    }
 
-        System.out.println(set);
-        System.out.println(set.extractBatch(3));
+    public static TrainSet loadTrainSet(String fileName) throws Exception {
+
+        Parser p = new Parser();
+
+            p.load(fileName);
+            int setSize = Integer.parseInt(p.getValue(new String[] { "TrainSet" }, "setSize"));
+            int inputSize = Integer.parseInt(p.getValue(new String[] { "TrainSet" }, "inputSize"));
+            int outputSize = Integer.parseInt(p.getValue(new String[] { "TrainSet" }, "outputSize"));
+            TrainSet set = new TrainSet(inputSize, outputSize);
+
+            for (int i = 1; i < setSize; i++) {
+                String inputString = p.getValue(new String[] { "TrainSet", "Sets", "Set" + i}, "input");
+                double[] input = ParserTools.parseDoubleArray(inputString);
+                String outputString = p.getValue(new String[] { "TrainSet", "Sets", "Set" + i}, "output");
+                double[] output = ParserTools.parseDoubleArray(outputString);
+
+                set.addData(input, output);
+            }
+            p.close();
+            
+            return set;
     }
 
     public String toString() {

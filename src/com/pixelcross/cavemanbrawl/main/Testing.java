@@ -16,7 +16,7 @@ public class Testing {
 		doors[2] = false;
 		doors[3] = false;
 		
-		MapGenerator mg = new MapGenerator(mapWidth, mapHeight, randomFillPercent, cleaningAmt, seed);
+		MapGenerator mg = new MapGenerator(mapWidth, mapHeight, randomFillPercent, seed);
 		int[][] map = mg.generateMap(doors);
 	}
 }

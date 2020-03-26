@@ -1,5 +1,7 @@
 package com.pixelcross.cavemanbrawl.levels;
 
+import java.awt.Point;
+
 import com.pixelcross.cavemanbrawl.gfx.GameCamera;
 import com.pixelcross.cavemanbrawl.levels.tiles.GrassTile;
 import com.pixelcross.cavemanbrawl.levels.tiles.RockTile;
@@ -12,6 +14,9 @@ public class Room {
 
 	private int width, height;
 	private TileMap[] tileLayers;
+	private RoomGenerator rg;
+	private boolean[] doors;
+	private Point playerSpawn;
 	
 	public Room(int width, int height) {
 		this.width = width;
@@ -20,6 +25,12 @@ public class Room {
 		for (int i = 0; i < tileLayers.length; i++) {
 			tileLayers[i] = new TileMap(width, height);
 		}
+		doors = new boolean[4];
+		doors[0] = false;
+		doors[1] = false;
+		doors[2] = false;
+		doors[3] = false;
+
 	}
 
 	public int getWidth() {
@@ -34,9 +45,14 @@ public class Room {
 		return tileLayers[layer].getTile(x, y);
 	}
 	
-	public void generateRoom() {
+	public void generateRoom(int caveValue) {
+		MapGenerator mg = new MapGenerator(width, height, caveValue);
+		rg = new RoomGenerator(mg.generateMap(doors));
+		int[][] foreground = rg.generateForeground();
+		int[][] spawns = rg.generateSpawns();
 		generateBackground();
-		generateForeground();
+		generateForeground(foreground);
+		generateSpawns(spawns);
 	}
 	
 	private void generateBackground() {
@@ -47,11 +63,21 @@ public class Room {
 		}
 	}
 	
-	private void generateForeground() {
+	private void generateForeground(int[][] foreground) {
 		for (int x = 0; x < width; x ++) {
 			for (int y = 0; y < height; y ++) {
-				if (x == 0 || x == width - 1 || y == 0 || y == height - 1) {
-					tileLayers[1].setTile(x, y, new RockTile(1));
+				if (foreground[x][y] == 1) {
+					tileLayers[1].setTile(x, y, new RockTile(0));
+				}
+			}
+		}
+	}
+	
+	private void generateSpawns(int[][] spawns) {
+		for (int x = 0; x < width; x ++) {
+			for (int y = 0; y < height; y ++) {
+				if (spawns[x][y] == 1) {
+					playerSpawn = new Point(x, y);
 				}
 			}
 		}
@@ -77,6 +103,10 @@ public class Room {
 				}
 			}
 		}
+	}
+
+	public Point getPlayerSpawn() {
+		return playerSpawn;
 	}
 
 }

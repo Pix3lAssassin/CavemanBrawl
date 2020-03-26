@@ -1,10 +1,12 @@
 package com.pixelcross.cavemanbrawl.states;
 
+import java.awt.Point;
 import java.util.ArrayList;
 
 import com.pixelcross.cavemanbrawl.entities.creatures.Player;
 import com.pixelcross.cavemanbrawl.gfx.GameCamera;
 import com.pixelcross.cavemanbrawl.levels.Level;
+import com.pixelcross.cavemanbrawl.levels.tiles.Tile;
 import com.pixelcross.cavemanbrawl.main.CavemanBrawlApp;
 
 import javafx.scene.Parent;
@@ -20,7 +22,8 @@ public class GameState extends State {
 		super(root);
 		camera = new GameCamera(this, 0, 0, CavemanBrawlApp.WIDTH, CavemanBrawlApp.HEIGHT);
 		level = new Level(camera, 6, 80, 60);
-		player = new Player(level, input, 100, 100);
+		Point playerSpawn = level.getPlayerSpawn();
+		player = new Player(level, input, playerSpawn.x * Tile.TILEWIDTH, playerSpawn.y * Tile.TILEHEIGHT);
 	}
 
 	@Override

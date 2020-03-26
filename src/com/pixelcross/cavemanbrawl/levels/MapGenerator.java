@@ -22,11 +22,11 @@ public class MapGenerator {
 
 		private int randomFillPercent;
 		private int smoothingAmt = 4;
-		private int cleaningAmt;
+		private int cleaningAmt = 4;
 
 		private int[][] map;
 
-		public MapGenerator(int width, int height, int randomFillPercent, int cleaningAmt, String seed) {
+		public MapGenerator(int width, int height, int randomFillPercent, String seed) {
 			this.width = width - (borderSize * 2);
 			this.height = height - (borderSize * 2);
 			this.randomFillPercent = randomFillPercent;
@@ -35,7 +35,7 @@ public class MapGenerator {
 			useRandomSeed = false;
 		}
 
-		public MapGenerator(int width, int height, int randomFillPercent, int cleaningAmt) {
+		public MapGenerator(int width, int height, int randomFillPercent) {
 			this.width = width - (borderSize * 2);
 			this.height = height - (borderSize * 2);
 			this.randomFillPercent = randomFillPercent;
@@ -127,10 +127,6 @@ public class MapGenerator {
 			return borderedMap;
 		}
 
-		private void addPlayerSpawn() {
-			
-		}
-				
 		public void debugCleanMap(CaveRoom room) {
 			Point startingTile = room.tiles.get(0);
 			CaveRoom fullRoom = new CaveRoom(getRegionTiles(startingTile.x, startingTile.y), map);

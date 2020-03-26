@@ -68,8 +68,10 @@ public class CavemanBrawlAppTest extends Application {
 		Label widthLabel, heightLabel, fillPercentLabel, trainSetLabel;
 		TextField mapWidth, mapHeight, randomFillPercent;
 		HBox doors = new HBox(3);
-		Button newCaveButton, predictButton, trainButton, saveNetworkButton, loadNetworkButton;
+		Button newCaveButton, predictButton, trainButton, saveNetworkButton, loadNetworkButton, saveTrainSetButton, loadTrainSetButton;
 		HBox allowTraining = new HBox(3);
+		HBox saveBox = new HBox(2);
+		HBox loadBox = new HBox(2);
 		widthLabel = new Label("Width:");
 		mapWidth = new TextField();
 		heightLabel = new Label("Height:");
@@ -80,11 +82,17 @@ public class CavemanBrawlAppTest extends Application {
 		trainButton = new Button("Train AI");
 		predictButton = new Button("AI Predict Spawn");
 		trainSetLabel = new Label("TrainSet Size: 0");
-		saveNetworkButton = new Button("Save Network");
-		loadNetworkButton = new Button("Load Network");
 		form.getChildren().addAll(widthLabel, mapWidth, heightLabel, mapHeight, fillPercentLabel, 
 				randomFillPercent, doors, newCaveButton, predictButton, trainButton, trainSetLabel,
-				saveNetworkButton, loadNetworkButton);
+				saveBox, loadBox);
+		
+		saveNetworkButton = new Button("Save Network");
+		loadNetworkButton = new Button("Load Network");
+		saveTrainSetButton = new Button("Save TrainSet");
+		loadTrainSetButton = new Button("Load TrainSet");
+		saveBox.getChildren().addAll(saveNetworkButton, saveTrainSetButton);
+		loadBox.getChildren().addAll(loadNetworkButton, loadTrainSetButton);
+		
 		
 		Label nDoorLabel, eDoorLabel, sDoorLabel, wDoorLabel;
 		CheckBox n, e, s, w;
@@ -115,6 +123,8 @@ public class CavemanBrawlAppTest extends Application {
 		predictButton.setOnAction(eh -> ts.predictSpawn());
 		saveNetworkButton.setOnAction(eh -> ts.saveNetwork());
 		loadNetworkButton.setOnAction(eh -> ts.loadNetwork());
+		saveTrainSetButton.setOnAction(eh -> ts.saveTrainSet());
+		loadTrainSetButton.setOnAction(eh -> ts.loadTrainSet());
 		smoothMap.setOnAction(eh -> ts.smoothMap());
 		getSeed.setOnAction(eh -> ts.getCurrentSeed());
 		

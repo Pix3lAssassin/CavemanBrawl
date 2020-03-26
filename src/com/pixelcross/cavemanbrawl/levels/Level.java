@@ -1,5 +1,6 @@
 package com.pixelcross.cavemanbrawl.levels;
 
+import java.awt.Point;
 import java.util.ArrayList;
 
 import com.pixelcross.cavemanbrawl.gfx.GameCamera;
@@ -20,12 +21,16 @@ public class Level {
 			rooms[i] = new Room(roomSizeWidth, roomSizeHeight);
 		}
 		currentRoom = rooms[0];
-		currentRoom.generateRoom();
+		currentRoom.generateRoom(49);
 		this.camera = camera;
 	}
 	
 	public Room getCurrentRoom() {
 		return currentRoom;
+	}
+	
+	public Point getPlayerSpawn() {
+		return rooms[0].getPlayerSpawn();
 	}
 	
 	public void update() {

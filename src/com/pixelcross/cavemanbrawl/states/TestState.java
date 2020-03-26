@@ -24,7 +24,7 @@ import javafx.scene.layout.Pane;
 
 public class TestState extends State implements Runnable {
 
-	int mapWidth = 80, mapHeight = 60, randomFillPercent = 50, smoothingAmt = 10, scale;
+	int mapWidth = 80, mapHeight = 60, randomFillPercent = 50, smoothingAmt = 4, scale;
 	Image cave;
 	Canvas c;
 	TextField mapWidthField; 
@@ -66,7 +66,7 @@ public class TestState extends State implements Runnable {
 		this.smoothingField.setText(smoothingAmt + "");;
 
 		net = new Network(80*60, 100, 8, 2);
-		ts = new TrainSet(80*60, 2);
+		ts = new TrainSet(80*60, 1);
 		
 		doors = new boolean[4];
 		doors[0] = n.isSelected();
@@ -74,7 +74,7 @@ public class TestState extends State implements Runnable {
 		doors[2] = s.isSelected();
 		doors[3] = w.isSelected();
 		
-		cave = getCaveImage(this.mapWidth, this.mapHeight, this.randomFillPercent, 4, doors);
+		cave = getCaveImage(this.mapWidth, this.mapHeight, this.randomFillPercent, doors);
 	}
 
 	public void setAllowTraining(boolean allowTraining) {
@@ -107,9 +107,9 @@ public class TestState extends State implements Runnable {
 		spawnPoint = null;
 		
 		if (seed.equals("")) {
-			cave = getCaveImage(mapWidth, mapHeight, randomFillPercent, smoothingAmt, doors);
+			cave = getCaveImage(mapWidth, mapHeight, randomFillPercent, doors);
 		} else {
-			cave = getCaveImage(mapWidth, mapHeight, randomFillPercent, smoothingAmt, seed, doors);
+			cave = getCaveImage(mapWidth, mapHeight, randomFillPercent, seed, doors);
 		}
 	}
 	
@@ -154,6 +154,24 @@ public class TestState extends State implements Runnable {
 	public void loadNetwork() {
 		try {
 			net = Network.loadNetwork("res/network/network1.txt");
+			System.out.println("Network loaded.");
+		} catch (Exception e) {
+			e.printStackTrace();
+		}
+	}
+	
+	public void saveTrainSet() {
+		try {
+			ts.saveTrainSet("res/network/trainset1.txt");
+			System.out.println("Network saved.");
+		} catch (Exception e) {
+			e.printStackTrace();
+		}
+	}
+	
+	public void loadTrainSet() {
+		try {
+			ts = TrainSet.loadTrainSet("res/network/trainset1.txt");
 			System.out.println("Network loaded.");
 		} catch (Exception e) {
 			e.printStackTrace();
@@ -233,12 +251,12 @@ public class TestState extends State implements Runnable {
 		return pixels;
 	}
 
-	private Image getCaveImage(int mapWidth, int mapHeight, int randomFillPercent, int smoothingAmt, boolean[] doors) {
+	private Image getCaveImage(int mapWidth, int mapHeight, int randomFillPercent, boolean[] doors) {
 		int scaleX = Math.max((int) (c.getWidth()/this.mapWidth), 1);
 		int scaleY = Math.max((int) (c.getHeight()/this.mapHeight), 1);
 		scale = Math.min(scaleX, scaleY);
 		
-		mg = new MapGenerator(mapWidth, mapHeight, randomFillPercent, smoothingAmt);
+		mg = new MapGenerator(mapWidth, mapHeight, randomFillPercent);
 		storedMap = mg.generateMap(doors);
 		String seed = mg.getSeed();
 		
@@ -247,12 +265,12 @@ public class TestState extends State implements Runnable {
 		return ImageLoader.convertToFxImage(getImageFromArray(getPixelsFromMap(storedMap), storedMap.length, storedMap[0].length), scale);	
 	}
 	
-	private Image getCaveImage(int mapWidth, int mapHeight, int randomFillPercent, int smoothingAmt, String seed, boolean[] doors) {
+	private Image getCaveImage(int mapWidth, int mapHeight, int randomFillPercent, String seed, boolean[] doors) {
 		int scaleX = Math.max((int) (c.getWidth()/this.mapWidth), 1);
 		int scaleY = Math.max((int) (c.getHeight()/this.mapHeight), 1);
 		scale = Math.min(scaleX, scaleY);
 		
-		mg = new MapGenerator(mapWidth, mapHeight, randomFillPercent, smoothingAmt, seed);
+		mg = new MapGenerator(mapWidth, mapHeight, randomFillPercent, seed);
 		storedMap = mg.generateMap(doors);
 		
 		seedLabel.setText(String.format("Seed: %s", seed));
