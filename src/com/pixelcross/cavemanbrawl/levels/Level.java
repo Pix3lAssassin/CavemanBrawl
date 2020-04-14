@@ -11,9 +11,9 @@ import javafx.scene.canvas.GraphicsContext;
 
 public class Level {
 
-	Room[] rooms;
-	Room currentRoom;
-	GameCamera camera;
+	private Room[] rooms;
+	private Room currentRoom;
+	private GameCamera camera;
 	
 	public Level(GameCamera camera, int numOfRooms, int roomSizeWidth, int roomSizeHeight) {
 		rooms = new Room[numOfRooms];

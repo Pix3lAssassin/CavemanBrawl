@@ -193,12 +193,7 @@ public class TestState extends State implements Runnable {
 		spawnPoint = new Point(spawnX, spawnY);
 		cave = ImageLoader.convertToFxImage(getImageFromArray(getPixelsFromMap(currentMap), currentMap.length, currentMap[0].length), scale);
 	}
-	
-	public void smoothMap() {
-		storedMap = mg.smoothMap(storedMap);
-		cave = ImageLoader.convertToFxImage(getImageFromArray(getPixelsFromMap(storedMap), storedMap.length, storedMap[0].length), scale);
-	}
-	
+		
 	@Override
 	public void update() {
 	}

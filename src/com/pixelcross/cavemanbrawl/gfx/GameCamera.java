@@ -19,7 +19,7 @@ public class GameCamera {
 		this.screenHeight = screenHeight;
 	}
 
-	public void checkBlankSpace() {
+	private void checkBlankSpace() {
 		if(xOffset < 0) {
 			xOffset = 0;
 		} else if(xOffset > gs.getLevel().getCurrentRoom().getWidth() * Tile.TILEWIDTH - screenWidth) {

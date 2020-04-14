@@ -125,7 +125,6 @@ public class CavemanBrawlAppTest extends Application {
 		loadNetworkButton.setOnAction(eh -> ts.loadNetwork());
 		saveTrainSetButton.setOnAction(eh -> ts.saveTrainSet());
 		loadTrainSetButton.setOnAction(eh -> ts.loadTrainSet());
-		smoothMap.setOnAction(eh -> ts.smoothMap());
 		getSeed.setOnAction(eh -> ts.getCurrentSeed());
 		
 		primaryStage.setScene(ts);

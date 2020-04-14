@@ -127,31 +127,6 @@ public class MapGenerator {
 			return borderedMap;
 		}
 
-		public void debugCleanMap(CaveRoom room) {
-			Point startingTile = room.tiles.get(0);
-			CaveRoom fullRoom = new CaveRoom(getRegionTiles(startingTile.x, startingTile.y), map);
-			
-			int counter = 0;
-			for (int i = 0; i < fullRoom.tiles.size()-1; i++) {
-				Point tile = fullRoom.tiles.get(i);
-				int[][] testMap = new int[width][height];
-				for (int x = 0; x < map.length; x ++) {
-					for (int y = 0; y < map[x].length; y ++) {
-						testMap[x][y] = map[x][y];
-					}
-				}
-				testMap[tile.x][tile.y] = 1;
-				
-				Point tileStart = fullRoom.tiles.get(i+1);
-				List<Point> roomTiles = getRegionTiles(tileStart.x, tileStart.y);
-				if (roomTiles.size() + 3 < fullRoom.tiles.size() || roomTiles.size() < 3) {
-					counter++;
-					drawCircle(tile, 1);
-				}
-			}
-			System.out.printf("Number Fixed: %d\n", counter);
-		}
-		
 		private int[][] getMapData(int[][] dataMap) {
 			int[][] recievingMap = new int[dataMap.length][dataMap[0].length];
 			for (int x = 0; x < recievingMap.length; x ++) {
@@ -413,7 +388,7 @@ public class MapGenerator {
 			}
 		}
 
-		public int[][] smoothMap(int[][] map) {
+		private int[][] smoothMap(int[][] map) {
 			for (int x = 0; x < width; x ++) {
 				for (int y = 0; y < height; y ++) {
 					int neighbourWallTiles = GetSurroundingWallCount(x,y);

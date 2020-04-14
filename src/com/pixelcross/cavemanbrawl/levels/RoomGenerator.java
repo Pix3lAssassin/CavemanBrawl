@@ -6,9 +6,9 @@ import java.util.List;
 
 public class RoomGenerator {
 
-	int width, height;
-	int[][] foreground, spawns, entities;
-	List<Point> availableSpawns;
+	private int width, height;
+	private int[][] foreground, spawns, entities;
+	private List<Point> availableSpawns;
 	
 	public RoomGenerator(int[][] map) {
 		this.foreground = map;
