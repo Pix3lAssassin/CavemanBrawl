@@ -12,12 +12,22 @@ import com.pixelcross.cavemanbrawl.main.CavemanBrawlApp;
 import javafx.scene.Parent;
 import javafx.scene.canvas.GraphicsContext;
 
+/**
+ * @author Justin Schreiber
+ *
+ * @see https://www.youtube.com/playlist?list=PLah6faXAgguMnTBs3JnEJY0shAc18XYQZ
+ */
 public class GameState extends State {
 	
 	GameCamera camera;
 	Player player;
 	Level level;
 	
+	/**
+	 * Creates a game state that handles the level, player, and camera
+	 * 
+	 * @param root
+	 */
 	public GameState(Parent root) {
 		super(root);
 		camera = new GameCamera(this, 0, 0, CavemanBrawlApp.WIDTH, CavemanBrawlApp.HEIGHT);

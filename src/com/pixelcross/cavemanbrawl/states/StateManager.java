@@ -1,5 +1,10 @@
 package com.pixelcross.cavemanbrawl.states;
 
+/**
+ * @author Justin Schreiber
+ *
+ * Holds the current state
+ */
 public class StateManager {
 
 	private State currentState;
