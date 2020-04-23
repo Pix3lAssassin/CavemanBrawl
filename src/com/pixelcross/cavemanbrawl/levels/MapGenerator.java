@@ -11,6 +11,11 @@ import java.util.Random;
 import com.pixelcross.cavemanbrawl.main.GameAdjustment;
 
 
+/**
+ * @author Justin Schreiber
+ *
+ * @see https://www.youtube.com/playlist?list=PLFt_AvWsXl0eZgMK_DT5_biRkWXftAOf9
+ */
 public class MapGenerator {
 
 		private int width;
@@ -26,20 +31,33 @@ public class MapGenerator {
 
 		private int[][] map;
 
+		/**
+		 * Creates a map of certain size with a defined fill density using a seed
+		 * 
+		 * @param width (The width of this map)
+		 * @param height (The height of this map)
+		 * @param randomFillPercent (The density of this map (Higher is more dense))
+		 * @param seed (The seed used to randomly generate the map)
+		 */
 		public MapGenerator(int width, int height, int randomFillPercent, String seed) {
 			this.width = width - (borderSize * 2);
 			this.height = height - (borderSize * 2);
 			this.randomFillPercent = randomFillPercent;
 			this.seed = seed;
-			this.cleaningAmt = cleaningAmt;
 			useRandomSeed = false;
 		}
 
+		/**
+		 *Creates a map of certain size with a defined fill density with a random seed
+		 * 
+		 * @param width (The width of this map)
+		 * @param height (The height of this map)
+		 * @param randomFillPercent (The density of this map (Higher is more dense))
+		 */
 		public MapGenerator(int width, int height, int randomFillPercent) {
 			this.width = width - (borderSize * 2);
 			this.height = height - (borderSize * 2);
 			this.randomFillPercent = randomFillPercent;
-			this.cleaningAmt = cleaningAmt;
 			useRandomSeed = true;
 		}
 
@@ -47,16 +65,26 @@ public class MapGenerator {
 			this.useRandomSeed = isRandom;
 		}
 		
+		/**
+		 * Generates a map with doors to other maps
+		 * 
+		 * @param doors (An array defining which doors are open at the 4 cardinal directions of the map)
+		 * @return A double integer array(map) defining open space and walls using 0s and 1s
+		 */
 		public int[][] generateMap(boolean[] doors) {
+			//Initialize a map and randomly fill it with 1s
 			map = new int[width][height];
 			RandomFillMap();
 
+			//Smooth the map a few times using cellular automata
 			for (int i = 0; i < smoothingAmt; i ++) {
 				map = smoothMap(map);
 			}
 			
+			//Fills in tiny rooms and gets rid of small walls
 			processMap();
 			
+			//Add a border to the map and then add holes for doors where necessary
 			int[][] borderedMap = new int[width + borderSize * 2][height + borderSize * 2];
 
 			for (int x = 0; x < borderedMap.length; x ++) {
@@ -80,6 +108,7 @@ public class MapGenerator {
 				}
 			}
 			
+			//Prepare rooms for connectivity
 			map = getMapData(borderedMap);
 			width = map.length;
 			height = map[0].length;
@@ -93,14 +122,18 @@ public class MapGenerator {
 			remainingRooms.get(0).isMainRoom = true;
 			remainingRooms.get(0).isAccessibleFromMainRoom = true;
 			
+			//Connect the rooms
 			connectClosestRooms(remainingRooms, false);
 				
+			//Clean up small rooms and walls
 			processMap();
 			
+			//Smoothes the walls and guarantees 2 wide corridors
 			for (int i = 0; i < cleaningAmt; i++) {
 				map = cleanMap(map);
 			}
 			
+			//Fix border in case of over smoothing
 			width = width - 2;
 			height = height - 2;
 			for (int x = 0; x < borderedMap.length; x ++) {
@@ -124,9 +157,16 @@ public class MapGenerator {
 				}
 			}
 			
+			//Return the completed map
 			return borderedMap;
 		}
 
+		/**
+		 * Creates a new map instead of a reference to the dataMap
+		 * 
+		 * @param dataMap (The map that data should be extracted from)
+		 * @return
+		 */
 		private int[][] getMapData(int[][] dataMap) {
 			int[][] recievingMap = new int[dataMap.length][dataMap[0].length];
 			for (int x = 0; x < recievingMap.length; x ++) {
@@ -137,6 +177,9 @@ public class MapGenerator {
 			return recievingMap;
 		}
 		
+		/**
+		 * Fills in tiny rooms and destroys small walls
+		 */
 		private void processMap() {
 			List<List<Point>> wallRegions = getRegions(1);
 			int wallThresholdSize = 25;
@@ -170,11 +213,19 @@ public class MapGenerator {
 			} 
 		}
 		
+		/**
+		 * Connects the closest rooms to each other recursively until all rooms are connected
+		 * 
+		 * @param allRooms
+		 * @param forceAccessibilityFromMainRoom (Guarantee this room is connected to the main (biggest) room)
+		 */
 		private void connectClosestRooms(List<CaveRoom> allRooms, boolean forceAccessibilityFromMainRoom) {
 			
+			//Room lists for accessibility from main room
 			List<CaveRoom> roomListA = new ArrayList<CaveRoom>();
 			List<CaveRoom> roomListB = new ArrayList<CaveRoom>();
 			
+			//Organize rooms into their respective lists
 			if (forceAccessibilityFromMainRoom) {
 				for (CaveRoom room : allRooms) {
 					if (room.isAccessibleFromMainRoom) {
@@ -196,6 +247,7 @@ public class MapGenerator {
 			boolean possibleConnectionFound = false;
 			
 			for (CaveRoom roomA : roomListA) {
+				//Create only one connection to another room if not forcing accessibility
 				if (!forceAccessibilityFromMainRoom) {
 					possibleConnectionFound = false;
 					if (roomA.connectedRooms.size() > 0) {
@@ -203,15 +255,18 @@ public class MapGenerator {
 					}
 				}
 				for (CaveRoom roomB : roomListB) {
+					//Skip these rooms if they are the same room or are already connected
 					if (roomA == roomB || roomA.isConnected(roomB)) {
 						continue;
 					}
+					//Loop through the edge tile of both rooms and find the shortest distance
 					for (int tileIndexA = 0; tileIndexA < roomA.edgeTiles.size(); tileIndexA++) {
 						for (int tileIndexB = 0; tileIndexB < roomB.edgeTiles.size(); tileIndexB++) {
 							Point tileA = roomA.edgeTiles.get(tileIndexA);
 							Point tileB = roomB.edgeTiles.get(tileIndexB);
-							int distanceBetweenRooms = (int) (Math.pow(tileA.x-tileB.x, 2) + Math.pow(tileA.y-tileB.y, 2));
+							int distanceBetweenRooms = (int) ((tileA.x-tileB.x)*(tileA.x-tileB.x) + (tileA.y-tileB.y)*(tileA.y-tileB.y));
 							
+							//Set the current best connection between rooms
 							if (distanceBetweenRooms < bestDistance || !possibleConnectionFound) {
 								bestDistance = distanceBetweenRooms;
 								possibleConnectionFound = true;
@@ -224,21 +279,32 @@ public class MapGenerator {
 					}
 				}
 				
+				//Connect the 2 rooms if a connection is found and not forcing accessibility
 				if (possibleConnectionFound && !forceAccessibilityFromMainRoom) {
 					createPassage(bestRoomA, bestRoomB, bestTileA, bestTileB);
 				}
 			} 
 
+			//Loop recursively until no possible connections are found
 			if (possibleConnectionFound && forceAccessibilityFromMainRoom) {
 				createPassage(bestRoomA, bestRoomB, bestTileA, bestTileB);
 				connectClosestRooms(allRooms, true);
 			}
 			
+			//If not forcing accessibility recursively connect rooms while forcing accessibility
 			if (!forceAccessibilityFromMainRoom) {
 				connectClosestRooms(allRooms, true);
 			}
 		}
 		
+		/**
+		 * Erase walls between rooms in a line
+		 * 
+		 * @param roomA (The one of the rooms being connected)
+		 * @param roomB (The other room being connected)
+		 * @param tileA (Starting tile)
+		 * @param tileB (Ending tile)
+		 */
 		private void createPassage(CaveRoom roomA, CaveRoom roomB, Point tileA, Point tileB) {
 			roomA.connectRooms(roomB);
 			
@@ -249,6 +315,12 @@ public class MapGenerator {
 			
 		}
 		
+		/**
+		 * Erase walls in a circular radius from a point
+		 * 
+		 * @param p (The center point)
+		 * @param r (The radius of the circle)
+		 */
 		private void drawCircle (Point p, int r) {
 			for (int x = -r; x <= r; x++) {
 				for (int y = -r; y <= r; y++) {
@@ -263,6 +335,13 @@ public class MapGenerator {
 			}
 		}
 		
+		/**
+		 * Create a list of points from a starting point to an ending point
+		 * 
+		 * @param from (Starting point)
+		 * @param to (Ending point)
+		 * @return the list of points between the two points
+		 */
 		private List<Point> getLine(Point from, Point to) {
 			List<Point> line = new ArrayList<Point>();
 			
@@ -313,10 +392,22 @@ public class MapGenerator {
 			return line;
 		}
 		
+		/**
+		 * Limit an int to the range -1, 1
+		 * 
+		 * @param i (input)
+		 * @return 
+		 */
 		private int sign(int i) {
 			return i < 0 ? -1 : i > 0 ? 1 : 0;
 		}
 		
+		/**
+		 * Get all the regions of a specific int (0 or 1)
+		 * 
+		 * @param tileType
+		 * @return List of List of Point that define all the different regions of that type
+		 */
 		private List<List<Point>> getRegions(int tileType) {
 			List<List<Point>> regions = new ArrayList<List<Point>>();
 			int[][] mapFlags = new int[width][height];
@@ -337,6 +428,13 @@ public class MapGenerator {
 			return regions;
 		}
 		
+		/**
+		 * Get the connected tiles to the one at x, y
+		 * 
+		 * @param startX
+		 * @param startY
+		 * @return List of Points that define that region
+		 */
 		private List<Point> getRegionTiles(int startX, int startY) {
 			List<Point> tiles = new ArrayList<Point>();
 			int[][] mapFlags = new int[width][height];
@@ -365,17 +463,30 @@ public class MapGenerator {
 			return tiles;
 		}
 
+		
+		/**
+		 * Check if the point is within the map
+		 * 
+		 * @param x
+		 * @param y
+		 * @return true if the point is inside the map
+		 */
 		private boolean isInMapRange(int x, int y) {
 			return x >= 0 && x < width && y >= 0 && y < height;
 		}
 		
+		/**
+		 * Fills the map at random with 1s using a seed
+		 */
 		private void RandomFillMap() {
+			//If using a random seed create a seed using the current time
 			if (useRandomSeed) {
 				seed = System.nanoTime() + "";
 			}
 
 			Random pseudoRandom = new Random(seed.hashCode());
 
+			//Loop through the map and add 1s
 			for (int x = 0; x < width; x ++) {
 				for (int y = 0; y < height; y ++) {
 					if (x == 0 || x == width-1 || y == 0 || y == height -1) {
@@ -388,6 +499,12 @@ public class MapGenerator {
 			}
 		}
 
+		/**
+		 * Smooth the map using cellular automata
+		 * 
+		 * @param map (Input map)
+		 * @return A smoothed map
+		 */
 		private int[][] smoothMap(int[][] map) {
 			for (int x = 0; x < width; x ++) {
 				for (int y = 0; y < height; y ++) {
@@ -403,6 +520,13 @@ public class MapGenerator {
 			return getMapData(map);
 		}
 
+		/**
+		 * Smoothes walls and guarantees 2 wide corridors 
+		 * Not from tutorial
+		 * 
+		 * @param map
+		 * @return a cleaned map
+		 */
 		private int[][] cleanMap(int[][] map) {
 			for (int y = 0; y < height; y ++) {
 				for (int x = 0; x < width; x ++) {
@@ -472,6 +596,13 @@ public class MapGenerator {
 			return getMapData(map);
 		}
 
+		/**
+		 * Gets how many walls are around the tile at x, y
+		 * 
+		 * @param gridX
+		 * @param gridY
+		 * @return the number of walls surrounding the tile at x, y
+		 */
 		private int GetSurroundingWallCount(int gridX, int gridY) {
 			int wallCount = 0;
 			for (int neighbourX = gridX - 1; neighbourX <= gridX + 1; neighbourX ++) {
@@ -490,6 +621,17 @@ public class MapGenerator {
 			return wallCount;
 		}
 		
+		/**
+		 * Gets the walls that are around the tile at x, y
+		 * Not tutorial
+		 * 
+		 * @param gridX
+		 * @param gridY
+		 * @return an array containing the surrounding walls (1 for wall 0 for null)
+		 * <br> 0 1 2
+		 * <br> 3 + 5
+		 * <br> 6 7 8
+		 */
 		private int[] GetSurroundingWalls(int gridX, int gridY) {
 			int[] surroundingWalls = new int[9];
 			int indexCounter = 0;
@@ -513,6 +655,11 @@ public class MapGenerator {
 			return seed;
 		}
 		
+		/**
+		 * @author Justin Schreiber
+		 *
+		 * Room defined by connected tile of value 0
+		 */
 		class CaveRoom implements Comparable<CaveRoom> {
 			public List<Point> tiles;
 			public List<Point> edgeTiles;
@@ -521,15 +668,20 @@ public class MapGenerator {
 			public boolean isAccessibleFromMainRoom;
 			public boolean isMainRoom;
 			
-			public CaveRoom() {
-				
-			}
+			public CaveRoom() {}
 			
+			/**
+			 * Creates a room with a list of points and passes in the map for finding edge tiles
+			 * 
+			 * @param roomTiles
+			 * @param map
+			 */
 			public CaveRoom(List<Point> roomTiles, int[][] map) {
 				tiles = roomTiles;
 				roomSize = tiles.size();
 				connectedRooms = new ArrayList<CaveRoom>();
 				
+				//Initializes ands add all edge tiles to the list
 				edgeTiles = new ArrayList<Point>();
 				for (Point tile : tiles) {
 					for (int x = tile.x - 1; x <= tile.x + 1; x++) {
@@ -542,6 +694,9 @@ public class MapGenerator {
 				}
 			}
 			
+			/**
+			 * Set accessible from main room to true and all connected rooms
+			 */
 			public void setAccessibleFromMainRoom() {
 				if (!isAccessibleFromMainRoom) {
 					isAccessibleFromMainRoom = true;
@@ -551,6 +706,11 @@ public class MapGenerator {
 				}
 			}
 			
+			/**
+			 * Adds each other to their respective connected rooms list and updates it accessibility
+			 * 
+			 * @param roomB
+			 */
 			public void connectRooms(CaveRoom roomB) {
 				if (this.isAccessibleFromMainRoom) {
 					roomB.setAccessibleFromMainRoom();
@@ -571,6 +731,11 @@ public class MapGenerator {
 			}
 		}
 		
+		/**
+		 * @author Justin Schreiber
+		 *
+		 * Wall defined by connected tile of value 1
+		 */
 		class CaveWall implements Comparable<CaveWall> {
 			public List<Point> tiles;
 			public List<Point> edgeTiles;
@@ -578,6 +743,12 @@ public class MapGenerator {
 			
 			public CaveWall() {	}
 			
+			/**
+			 * Creates a wall with a list of points and passes in the map for finding edge tiles
+			 * 
+			 * @param wallTiles
+			 * @param map
+			 */
 			public CaveWall(List<Point> wallTiles, int[][] map) {
 				tiles = wallTiles;
 				wallSize = tiles.size();
@@ -594,6 +765,9 @@ public class MapGenerator {
 				}
 			}
 			
+			/**
+			 * Updates the edge tiles
+			 */
 			private void updateEdgeTiles() {
 				edgeTiles = new ArrayList<Point>();
 				for (Point tile : tiles) {
@@ -607,6 +781,11 @@ public class MapGenerator {
 				}
 			}
 			
+			/**
+			 * 
+			 * 
+			 * @param r
+			 */
 			public void checkNearbyWalls(int r) {
 				for (Point tile : edgeTiles) {
 					for (int x = tile.x - r; x <= tile.x + r; x++) {

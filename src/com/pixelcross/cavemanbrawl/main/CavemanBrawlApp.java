@@ -14,8 +14,14 @@ import javafx.scene.text.Font;
 import javafx.scene.text.FontWeight;
 import javafx.stage.Stage;
 
+/**
+ * @author Justin Schreiber
+ *
+ * Launcher that handles javafx
+ */
 public class CavemanBrawlApp extends Application {
 
+	//Games width and height
 	public static final int WIDTH = 800, HEIGHT = 600;
 	
 	public static void main(String[] args) {
@@ -26,18 +32,21 @@ public class CavemanBrawlApp extends Application {
 	public void start(Stage primaryStage) throws Exception {
 		primaryStage.setTitle("Caveman Brawl");
 		
+		//Initialize assets and scenes
 		Group root = new Group();
 		Assets.init();
 		GameState gs = new GameState(root);
 		primaryStage.setScene(gs);
 
+		//Handles the current state
 		StateManager sm = new StateManager(gs);
 		
+		//Initialize the canvas and get GraphicsContext object
 		Canvas canvas = new Canvas(WIDTH, HEIGHT);
 		root.getChildren().add(canvas);
-		
 		GraphicsContext gc = canvas.getGraphicsContext2D();
 		
+		//Game loop
 		AnimationTimer timer = new AnimationTimer() {
 			int updatesPerSec = 30;
 			long timePerUpdate = 1000000000  / updatesPerSec;
@@ -49,16 +58,19 @@ public class CavemanBrawlApp extends Application {
 				debugTimer += currentTime - lastTime;
 				lastTime = currentTime;
 				
+				//Update loop will update based on updatesPerSecond
 				while(nextUpdate < currentTime) {
 					update();
 					nextUpdate += timePerUpdate;
 					ticks++;
 				}
 				
+				//Calculate interpolation and render the fram
 				double interpolation = (currentTime + timePerUpdate - nextUpdate) / timePerUpdate;
 				render(interpolation);
 				renders++;
 				
+				//Debug info
 				if (debugTimer >= 1000000000) {
 					System.out.printf("UPS: %d\n", ticks);
 					System.out.printf("FPS: %d\n", renders);
@@ -68,10 +80,12 @@ public class CavemanBrawlApp extends Application {
 				}
 			}
 			
+			//Updates current state
 			private void update() {
 				sm.getState().update();
 			}
 			
+			//Renders current state
 			private void render(double interpolation) {
 				sm.getState().render(gc, interpolation);
 			}

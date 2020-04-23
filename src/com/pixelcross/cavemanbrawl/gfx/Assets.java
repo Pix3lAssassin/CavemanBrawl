@@ -5,6 +5,13 @@ import javafx.scene.image.PixelReader;
 import javafx.scene.image.PixelWriter;
 import javafx.scene.image.WritableImage;
 
+/**
+ * @author Justin Schreiber
+ *
+ * @see https://www.youtube.com/playlist?list=PLah6faXAgguMnTBs3JnEJY0shAc18XYQZ
+ *
+ * Loads and stores all the assets needed for the game
+ */
 public class Assets {
 
 	private static final int width = 16, height = 16;
@@ -12,6 +19,9 @@ public class Assets {
 	public static Image grass, wall, rock;
 	public static Image[] player_down, player_up, player_right, player_left;
 	
+	/**
+	 * Initializes all the assets should be called before first game loop
+	 */
 	public static void init() {
 		SpriteSheet sheet = new SpriteSheet(ImageLoader.loadImage("/textures/town_tiles.png"));
 		

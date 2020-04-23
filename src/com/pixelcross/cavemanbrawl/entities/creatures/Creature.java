@@ -4,6 +4,14 @@ import com.pixelcross.cavemanbrawl.entities.Entity;
 import com.pixelcross.cavemanbrawl.levels.Level;
 import com.pixelcross.cavemanbrawl.levels.tiles.Tile;
 
+/**
+ * @author Justin Schreiber
+ * 
+ * @see https://www.youtube.com/playlist?list=PLah6faXAgguMnTBs3JnEJY0shAc18XYQZ
+ *
+ * Defines a creature that can move around in the world with limited health
+ *
+ */
 public abstract class Creature extends Entity {
 
 	public static final int DEFAULT_HEALTH = 10;
@@ -15,6 +23,15 @@ public abstract class Creature extends Entity {
 	protected double xMove, yMove;
 	protected Level currentLevel;
 
+	/**
+	 * Defines a creature that can move around in the world with limited health
+	 * 
+	 * @param level (The current level)
+	 * @param x (The starting x position of the Creature)
+	 * @param y (The starting y position of the Creature)
+	 * @param width (The width of the Creature)
+	 * @param height (The height of the Creature)
+	 */
 	public Creature(Level level, double x, double y, int width, int height) {
 		super(x, y, width, height);
 		health = DEFAULT_HEALTH;
@@ -24,11 +41,17 @@ public abstract class Creature extends Entity {
 		currentLevel = level;
 	}
 
+	/**
+	 * Move the creature
+	 */
 	public void move() {
 		moveX();
 		moveY();
 	}
 	
+	/**
+	 * Handles movement in the X direction and world collisions
+	 */
 	protected void moveX() {
 		if(xMove > 0) {//Moving right			
 			int tx = (int) (x + xMove + bounds.x + bounds.width) / Tile.TILEWIDTH;
@@ -51,6 +74,9 @@ public abstract class Creature extends Entity {
 		}
 	}
 	
+	/**
+	 * Handles movement in the Y direction and world collisions
+	 */
 	protected void moveY() {
 		if(yMove > 0) {//Moving down			
 			int ty = (int) (y + yMove + bounds.y + bounds.height) / Tile.TILEHEIGHT;
@@ -74,6 +100,11 @@ public abstract class Creature extends Entity {
 		}
 	}
 	
+	/**
+	 * @param x
+	 * @param y
+	 * @return true if the Creature collided with a solid tile
+	 */
 	protected boolean collisionWithTile(int x, int y) {
 		Tile tile = currentLevel.getCurrentRoom().getTile(1, x, y);
 		if (tile != null) {
@@ -83,22 +114,37 @@ public abstract class Creature extends Entity {
 		}
 	}	
 		
+	/**
+	 * @return X Movement
+	 */
 	public double getxMove() {
 		return xMove;
 	}
 
+	/**
+	 * @return Y Movement
+	 */
 	public double getyMove() {
 		return yMove;
 	}
 
+	/**
+	 * @return current health
+	 */
 	public int getHealth() {
 		return health;
 	}
-
+	
+	/**
+	 * @param health
+	 */
 	public void setHealth(int health) {
 		this.health = health;
 	}
 
+	/**
+	 * @return speed
+	 */
 	public double getSpeed() {
 		return speed;
 	}

@@ -1,5 +1,10 @@
 package com.pixelcross.cavemanbrawl.main;
 
+/**
+ * @author Justin Schreiber
+ *
+ * Useful debugger tool for finding loop times
+ */
 public class Timer {
 
 	private static double startTime;

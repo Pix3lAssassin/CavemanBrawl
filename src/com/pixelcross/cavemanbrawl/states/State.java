@@ -10,12 +10,25 @@ import javafx.scene.canvas.GraphicsContext;
 import javafx.scene.input.KeyEvent;
 import javafx.scene.input.MouseEvent;
 
+/**
+ * @author Justin Schreiber
+ *
+ * @see https://www.youtube.com/playlist?list=PLah6faXAgguMnTBs3JnEJY0shAc18XYQZ
+ */
 public abstract class State extends Scene {
 
+	//List of inputs currently being pressed down
 	protected ArrayList<String> input;
+	//Current position of the mouse
 	protected Point2D.Double mouse;
+	//Whether the mouse is currently being pressed down
 	protected boolean mouseDown;
 	
+	/**
+	 * Creates a state that can handle inputs
+	 * 
+	 * @param root
+	 */
 	public State(Parent root) {
 		super(root);
 		
@@ -59,8 +72,17 @@ public abstract class State extends Scene {
 		});
 	}
 	
+	/**
+	 * Updates the state
+	 */
 	public abstract void update();
 	
+	/**
+	 * Renders the state
+	 * 
+	 * @param gc
+	 * @param interpolation
+	 */
 	public abstract void render(GraphicsContext gc, double interpolation);
 
 	protected void mousePressed(MouseEvent e) {}
