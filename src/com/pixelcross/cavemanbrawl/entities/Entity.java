@@ -1,7 +1,10 @@
 package com.pixelcross.cavemanbrawl.entities;
 
 import java.awt.Rectangle;
+import java.util.ArrayList;
+import java.util.List;
 
+import com.pixelcross.cavemanbrawl.components.Component;
 import com.pixelcross.cavemanbrawl.gfx.GameCamera;
 
 import javafx.scene.canvas.GraphicsContext;
@@ -18,6 +21,7 @@ public abstract class Entity {
 	protected double x, y;
 	protected int width, height;
 	protected Rectangle bounds;
+	protected List<Component> components;
 	
 	/**
 	 * An interactive object in the game world
@@ -69,6 +73,36 @@ public abstract class Entity {
 		this.height = height;
 	}
 	
+	/**
+	 * Gets a component based on the components class ex. getComponent(Collider.class)
+	 * 
+	 * @param componentClass (The class to look for)
+	 * @return The first object from the components list that is of the type componentClass
+	 */
+	public <T extends Component> T getComponent(Class<T> componentClass) {
+		for (Component c : components) {
+			if (componentClass.isAssignableFrom(c.getClass())) {
+				return (T) c;
+			}
+		}
+		return null;
+	}
+	
+	/**
+	 * Gets a list of components based on the components class ex getComponents(AudioSource.class)
+	 * 
+	 * @param componentClass (The class to look for)
+	 * @return A list of objects from the components list that are of the type componentClass
+	 */
+	public <T extends Component> List<T> getComponents(Class<T> componentClass) {
+		ArrayList<T> componentList = new ArrayList<T>();
+		for (Component c : components) {
+			if (componentClass.isAssignableFrom(c.getClass())) {
+				componentList.add((T) c);
+			}
+		}
+		return componentList;
+	}
 	
 	/**
 	 * Update function called at regular intervals

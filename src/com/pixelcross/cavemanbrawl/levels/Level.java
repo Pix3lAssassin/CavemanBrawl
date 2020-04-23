@@ -30,8 +30,9 @@ public class Level {
 	 */
 	public Level(GameCamera camera, int numOfRooms, int roomSizeWidth, int roomSizeHeight) {
 		rooms = new Room[numOfRooms];
+		int[][] roomDoors = generateLevel(numOfRooms);
 		for (int i = 0; i < rooms.length; i++) {
-			rooms[i] = new Room(roomSizeWidth, roomSizeHeight);
+			rooms[i] = new Room(roomSizeWidth, roomSizeHeight, roomDoors[i]);
 		}
 		currentRoom = rooms[0];
 		currentRoom.generateRoom(49);
@@ -44,6 +45,66 @@ public class Level {
 	
 	public Point getPlayerSpawn() {
 		return rooms[0].getPlayerSpawn();
+	}
+	
+	private int[][] generateLevel(int numOfRooms) {
+		ArrayList<Point> roomPositions = new ArrayList<Point>();
+		int[][] levelDoors = new int[numOfRooms][4];
+		boolean invalidLevel = true;
+		
+		//Loop until rooms don't overlap each other
+		while (invalidLevel) {	
+			roomPositions.clear();
+			roomPositions.add(new Point(0, 0));
+			Point currentPoint;
+			
+			//Loop for the number of rooms and add a room in a new direction
+			for (int i = 0; i < numOfRooms-1; i++) {
+				//From the newest room check if which rooms adjacent are available
+				currentPoint = roomPositions.get(i);
+				ArrayList<Point> availableRooms = new ArrayList<Point>();
+				ArrayList<Point> adjacentRooms = new ArrayList<Point>();
+				adjacentRooms.add(new Point(currentPoint.x-1, currentPoint.y+0));
+				adjacentRooms.add(new Point(currentPoint.x+1, currentPoint.y+0));
+				adjacentRooms.add(new Point(currentPoint.x+0, currentPoint.y-1));
+				adjacentRooms.add(new Point(currentPoint.x+0, currentPoint.y+1));
+				for (Point room : adjacentRooms) {
+					if (!roomPositions.contains(room)) {
+						availableRooms.add(room);
+					}
+				}
+				
+				//Add a room randomly from the availableRooms to the list of roomPositions
+				if (availableRooms.size() > 0) {
+					roomPositions.add(availableRooms.get((int) (Math.random()*availableRooms.size())));
+				} else { //If no available rooms restart room position generation
+					break;
+				}
+			}
+			//If we have a good level exit room position generation
+			if (roomPositions.size() == numOfRooms) {
+				invalidLevel = false;
+			}
+		}
+		
+		for (int x = 0; x < numOfRooms-1; x++) {
+			Point currentRoom = roomPositions.get(x);
+			Point[] adjacentRooms = new Point[4];
+			adjacentRooms[0] = new Point(currentRoom.x+0, currentRoom.y-1); //North
+			adjacentRooms[1] = new Point(currentRoom.x+1, currentRoom.y+0); //East
+			adjacentRooms[2] = new Point(currentRoom.x+0, currentRoom.y+1); //South
+			adjacentRooms[3] = new Point(currentRoom.x-1, currentRoom.y+0); //West
+	
+			for (int y = 0; y < 4; y++) {
+				int index = roomPositions.indexOf(adjacentRooms[y]);
+				levelDoors[x][y] = index;
+			}
+		}
+		for (int y = 0; y < 4; y++) {
+			levelDoors[numOfRooms-1][(y+2)%4] = levelDoors[numOfRooms-2][y] == numOfRooms-1 ? numOfRooms-2: -1;
+		}
+		
+		return levelDoors;
 	}
 	
 	/**

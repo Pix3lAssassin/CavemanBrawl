@@ -20,8 +20,8 @@ public class Room {
 	private int width, height;
 	private TileMap[] tileLayers;
 	private RoomGenerator rg;
-	private boolean[] doors;
 	private Point playerSpawn;
+	private int[] connectedRoomIds;
 	
 	/**
 	 * Creates a Room with a given width and height
@@ -29,7 +29,7 @@ public class Room {
 	 * @param width
 	 * @param height
 	 */
-	public Room(int width, int height) {
+	public Room(int width, int height, int[] connectedRoomIds) {
 		this.width = width;
 		this.height = height;
 		//Initialize all the tile maps 
@@ -38,13 +38,7 @@ public class Room {
 		for (int i = 0; i < tileLayers.length; i++) {
 			tileLayers[i] = new TileMap(width, height);
 		}
-		//Initialize all doors to closed
-		doors = new boolean[4];
-		doors[0] = false;
-		doors[1] = false;
-		doors[2] = false;
-		doors[3] = false;
-
+		this.connectedRoomIds = connectedRoomIds;
 	}
 
 	public int getWidth() {
@@ -73,6 +67,9 @@ public class Room {
 	 * @param caveValue (The density of the cave generation)
 	 */
 	public void generateRoom(int caveValue) {
+		boolean[] doors = new boolean[4];
+		for (int i = 0; i < 4; i++)
+			doors[i] = connectedRoomIds[i] > -1;
 		//Creates a map generator with the given 
 		//cave density with a size that matches the room
 		MapGenerator mg = new MapGenerator(width, height, caveValue);
