@@ -27,7 +27,7 @@ public class MapGenerator {
 
 		private int randomFillPercent;
 		private int smoothingAmt = 4;
-		private int cleaningAmt = 4;
+		private int cleaningAmt = 3;
 
 		private int[][] map;
 
@@ -40,8 +40,8 @@ public class MapGenerator {
 		 * @param seed (The seed used to randomly generate the map)
 		 */
 		public MapGenerator(int width, int height, int randomFillPercent, String seed) {
-			this.width = width - (borderSize * 2);
-			this.height = height - (borderSize * 2);
+			this.width = width;
+			this.height = height;
 			this.randomFillPercent = randomFillPercent;
 			this.seed = seed;
 			useRandomSeed = false;
@@ -72,6 +72,8 @@ public class MapGenerator {
 		 * @return A double integer array(map) defining open space and walls using 0s and 1s
 		 */
 		public int[][] generateMap(boolean[] doors) {
+			width = width - borderSize * 2;
+			height = height - borderSize * 2;
 			//Initialize a map and randomly fill it with 1s
 			map = new int[width][height];
 			RandomFillMap();
@@ -134,11 +136,11 @@ public class MapGenerator {
 			}
 			
 			//Fix border in case of over smoothing
-			width = width - 2;
-			height = height - 2;
+			int adjustedWidth = width - 2;
+			int adjustedHeight = height - 2;
 			for (int x = 0; x < borderedMap.length; x ++) {
 				for (int y = 0; y < borderedMap[x].length; y ++) {
-					if (x >= 1 && x < width + 1 && y >= 1 && y < height + 1) {
+					if (x >= 1 && x < adjustedWidth + 1 && y >= 1 && y < adjustedHeight + 1) {
 						borderedMap[x][y] = map[x-1][y-1];
 					}
 					else {
@@ -148,7 +150,7 @@ public class MapGenerator {
 							borderedMap[x][y] = 0;
 						} else if (y == borderedMap[x].length-1 && x > borderedMap.length/2-4 && x < borderedMap.length/2+4 && doors[2]) {
 							borderedMap[x][y] = 0;
-						} else if (x == 0 && y > borderedMap[x].length/2-2 && y < borderedMap[x].length/2+2 && doors[3]) {
+						} else if (x == 0 && y > borderedMap[x].length/2-4 && y < borderedMap[x].length/2+4 && doors[3]) {
 							borderedMap[x][y] = 0;
 						} else {
 							borderedMap[x][y] = 1;
@@ -160,7 +162,7 @@ public class MapGenerator {
 			//Return the completed map
 			return borderedMap;
 		}
-
+		
 		/**
 		 * Creates a new map instead of a reference to the dataMap
 		 * 
@@ -534,7 +536,7 @@ public class MapGenerator {
 					int neighbourWallTiles = GetSurroundingWallCount(x,y);
 
 					if (tileType == 0) {
-						if (neighbourWallTiles > 4) {
+						if (neighbourWallTiles > 4 && getWallCount(x,y) > 4) {
 							map[x][y] = 1;
 						} else if (neighbourWallTiles == 4) {
 							int[] surroundingWalls = GetSurroundingWalls(x, y);
@@ -620,7 +622,30 @@ public class MapGenerator {
 
 			return wallCount;
 		}
+
 		
+		/**
+		 * Gets how many walls are around the tile at x, y. Doesn't include out of map as walls
+		 * 
+		 * @param gridX
+		 * @param gridY
+		 * @return the number of walls surrounding the tile at x, y
+		 */
+		private int getWallCount(int gridX, int gridY) {
+			int wallCount = 0;
+			for (int neighbourX = gridX - 1; neighbourX <= gridX + 1; neighbourX ++) {
+				for (int neighbourY = gridY - 1; neighbourY <= gridY + 1; neighbourY ++) {
+					if (neighbourX >= 0 && neighbourX < width && neighbourY >= 0 && neighbourY < height) {
+						if (neighbourX != gridX || neighbourY != gridY) {
+							wallCount += map[neighbourX][neighbourY];
+						}
+					}
+				}
+			}
+
+			return wallCount;
+		}
+
 		/**
 		 * Gets the walls that are around the tile at x, y
 		 * Not tutorial

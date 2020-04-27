@@ -4,9 +4,11 @@ import java.awt.Point;
 import java.awt.geom.Point2D;
 import java.awt.image.BufferedImage;
 import java.awt.image.WritableRaster;
+import java.util.List;
 
 import com.pixelcross.cavemanbrawl.gfx.ImageLoader;
 import com.pixelcross.cavemanbrawl.levels.MapGenerator;
+import com.pixelcross.cavemanbrawl.levels.RoomGenerator;
 import com.pixelcross.cavemanbrawl.main.Timer;
 import com.pixelcross.cavemanbrawl.neuralnetwork.fullyconnectednetwork.Network;
 import com.pixelcross.cavemanbrawl.neuralnetwork.trainset.TrainSet;
@@ -21,11 +23,12 @@ import javafx.scene.control.TextField;
 import javafx.scene.image.Image;
 import javafx.scene.input.MouseEvent;
 import javafx.scene.layout.Pane;
+import javafx.scene.paint.Color;
 
 public class TestState extends State implements Runnable {
 
 	int mapWidth = 80, mapHeight = 60, randomFillPercent = 50, smoothingAmt = 4, scale;
-	Image cave;
+	Image cave, spawnableArea, spawns;
 	Canvas c;
 	TextField mapWidthField; 
 	TextField mapHeightField; 
@@ -34,7 +37,8 @@ public class TestState extends State implements Runnable {
 	MapGenerator mg;
 	CheckBox n, e, s, w;
 	boolean[] doors;
-	int[][] currentMap, storedMap;
+	int[][] currentMap, storedMap, spawnableAreaMap, spawnMap;
+	List<Point> spawnableArea2;
 	Network net;
 	TrainSet ts;
 	boolean allowTraining;
@@ -202,6 +206,12 @@ public class TestState extends State implements Runnable {
 	public void render(GraphicsContext gc, double interpolation) {
 		gc.clearRect(0, 0, c.getWidth(), c.getHeight());
 		gc.drawImage(cave, 0, 0);
+		gc.drawImage(spawnableArea, 0, 0);
+		for (Point p : spawnableArea2) {
+			gc.setFill(new Color(0, 0, 1, .25));
+			gc.fillRect(p.x * scale, p.y * scale, scale, scale);
+		}
+		gc.drawImage(spawns, 0, 0);
 	}
 	
 	@Override
@@ -246,6 +256,46 @@ public class TestState extends State implements Runnable {
 		return pixels;
 	}
 
+	private int[] getSpawnablePixelsFromMap(int[][] map) {
+		int[] pixels = new int[map.length * map[0].length * 4];
+		
+		for (int x = 0; x < map.length; x++) {
+			for (int y = 0; y < map[x].length; y++) {
+				PixelColor c = new PixelColor(0, 0, 0, 0);
+				if (map[x][y] == 0) {
+					c = new PixelColor(200, 0, 0, 64);
+				} 
+				pixels[(y * map.length + x) * 4+0] = c.getColors()[0];
+				pixels[(y * map.length + x) * 4+1] = c.getColors()[1];
+				pixels[(y * map.length + x) * 4+2] = c.getColors()[2];
+				pixels[(y * map.length + x) * 4+3] = c.getColors()[3];
+			}
+		}
+		
+		return pixels;
+	}
+
+	private int[] getSpawnPixelsFromMap(int[][] map) {
+		int[] pixels = new int[map.length * map[0].length * 4];
+		
+		for (int x = 0; x < map.length; x++) {
+			for (int y = 0; y < map[x].length; y++) {
+				PixelColor c = new PixelColor(0, 0, 0, 0);
+				if (map[x][y] == 1) {
+					c = new PixelColor(200, 0, 0, 255);
+				} else if (map[x][y] == -1) {
+					c = new PixelColor(0, 0, 200, 255);
+				} 
+				pixels[(y * map.length + x) * 4+0] = c.getColors()[0];
+				pixels[(y * map.length + x) * 4+1] = c.getColors()[1];
+				pixels[(y * map.length + x) * 4+2] = c.getColors()[2];
+				pixels[(y * map.length + x) * 4+3] = c.getColors()[3];
+			}
+		}
+		
+		return pixels;
+	}
+
 	private Image getCaveImage(int mapWidth, int mapHeight, int randomFillPercent, boolean[] doors) {
 		int scaleX = Math.max((int) (c.getWidth()/this.mapWidth), 1);
 		int scaleY = Math.max((int) (c.getHeight()/this.mapHeight), 1);
@@ -254,6 +304,14 @@ public class TestState extends State implements Runnable {
 		mg = new MapGenerator(mapWidth, mapHeight, randomFillPercent);
 		storedMap = mg.generateMap(doors);
 		String seed = mg.getSeed();
+		
+		RoomGenerator rg = new RoomGenerator(storedMap);
+		spawnableAreaMap = rg.getSpawnableArea();
+		spawnableArea = ImageLoader.convertToFxImage(getImageFromArray(getSpawnablePixelsFromMap(spawnableAreaMap), spawnableAreaMap.length, spawnableAreaMap[0].length), scale);
+
+		spawnableArea2 = rg.getAvailableSpawns();
+		spawnMap = rg.generateSpawns(doors);
+		spawns = ImageLoader.convertToFxImage(getImageFromArray(getSpawnPixelsFromMap(spawnMap), spawnMap.length, spawnMap[0].length), scale);
 		
 		seedLabel.setText(String.format("Seed: %s", seed));
 		
@@ -267,7 +325,15 @@ public class TestState extends State implements Runnable {
 		
 		mg = new MapGenerator(mapWidth, mapHeight, randomFillPercent, seed);
 		storedMap = mg.generateMap(doors);
-		
+
+		RoomGenerator rg = new RoomGenerator(storedMap);
+		spawnableAreaMap = rg.getSpawnableArea();
+		spawnableArea = ImageLoader.convertToFxImage(getImageFromArray(getSpawnablePixelsFromMap(spawnableAreaMap), spawnableAreaMap.length, spawnableAreaMap[0].length), scale);
+
+		spawnableArea2 = rg.getAvailableSpawns();
+		spawnMap = rg.generateSpawns(doors);
+		spawns = ImageLoader.convertToFxImage(getImageFromArray(getSpawnPixelsFromMap(spawnMap), spawnMap.length, spawnMap[0].length), scale);
+
 		seedLabel.setText(String.format("Seed: %s", seed));
 		
 		return ImageLoader.convertToFxImage(getImageFromArray(getPixelsFromMap(storedMap), storedMap.length, storedMap[0].length), scale);	
