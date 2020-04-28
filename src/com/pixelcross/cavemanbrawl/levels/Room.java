@@ -78,7 +78,7 @@ public class Room {
 		//Generates the foreground for the room (Walls)
 		int[][] foreground = rg.generateForeground();
 		//Generates spawn positions for the room
-		int[][] spawns = rg.generateSpawns();
+		int[][] spawns = rg.generateSpawns(doors);
 		//Generates the backgound tiles for the room
 		generateBackground();
 		//Generates the foreground (walls) using the generated foreground array
