@@ -39,17 +39,29 @@ public class GameCamera {
 	 * Checks if the camera is looking outside the scope of the room/world
 	 */
 	private void checkBlankSpace() {
-		if(xOffset < 0) {
-			xOffset = 0;
-		} else if(xOffset > gs.getLevel().getCurrentRoom().getWidth() * Tile.TILEWIDTH - screenWidth) {
-			xOffset = gs.getLevel().getCurrentRoom().getWidth() * Tile.TILEWIDTH - screenWidth;
+		if(xOffset < 2 * Tile.TILEWIDTH) {
+			xOffset = 2 * Tile.TILEWIDTH;
+		} else if(xOffset > gs.getLevel().getCurrentRoom().getWidth() * Tile.TILEWIDTH - screenWidth + Tile.TILEWIDTH*2) {
+			xOffset = gs.getLevel().getCurrentRoom().getWidth() * Tile.TILEWIDTH - screenWidth + Tile.TILEWIDTH*2;
 		}
 		
-		if(yOffset < 0) {
-			yOffset = 0;
-		} else if (yOffset > gs.getLevel().getCurrentRoom().getHeight() * Tile.TILEHEIGHT - screenHeight) {
-			yOffset = gs.getLevel().getCurrentRoom().getHeight() * Tile.TILEHEIGHT - screenHeight;
+		if(yOffset < 2 * Tile.TILEHEIGHT) {
+			yOffset = 2 * Tile.TILEHEIGHT;
+		} else if (yOffset > gs.getLevel().getCurrentRoom().getHeight() * Tile.TILEHEIGHT - screenHeight + Tile.TILEHEIGHT*2) {
+			yOffset = gs.getLevel().getCurrentRoom().getHeight() * Tile.TILEHEIGHT - screenHeight + Tile.TILEHEIGHT*2;
 		}
+		//Used to see outside of the visible game region
+//		if(xOffset < 0) {
+//			xOffset = 0;
+//		} else if(xOffset > gs.getLevel().getCurrentRoom().getWidth() * Tile.TILEWIDTH - screenWidth + Tile.TILEWIDTH*4) {
+//			xOffset = gs.getLevel().getCurrentRoom().getWidth() * Tile.TILEWIDTH - screenWidth + Tile.TILEWIDTH*4;
+//		}
+//		
+//		if(yOffset < 0) {
+//			yOffset = 0;
+//		} else if (yOffset > gs.getLevel().getCurrentRoom().getHeight() * Tile.TILEHEIGHT - screenHeight + Tile.TILEHEIGHT *4) {
+//			yOffset = gs.getLevel().getCurrentRoom().getHeight() * Tile.TILEHEIGHT - screenHeight + Tile.TILEHEIGHT*4;
+//		}
 	}
 	
 	/**

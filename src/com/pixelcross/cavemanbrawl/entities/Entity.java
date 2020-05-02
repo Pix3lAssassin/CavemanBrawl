@@ -49,6 +49,11 @@ public abstract class Entity {
 		this.x = x;
 	}
 
+	public void setPos(double x, double y) {
+		this.x = x;
+		this.y = y;
+	}
+
 	public double getY() {
 		return y;
 	}
