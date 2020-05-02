@@ -2,7 +2,9 @@ package com.pixelcross.cavemanbrawl.levels;
 
 import java.awt.Point;
 import java.util.ArrayList;
+import java.util.List;
 
+import com.pixelcross.cavemanbrawl.entities.LevelListener;
 import com.pixelcross.cavemanbrawl.gfx.GameCamera;
 import com.pixelcross.cavemanbrawl.levels.tiles.Tile;
 import com.pixelcross.cavemanbrawl.main.CavemanBrawlApp;
@@ -19,6 +21,7 @@ public class Level {
 	private Room[] rooms;
 	private Room currentRoom;
 	private GameCamera camera;
+	private List<LevelListener> levelListeners;
 	
 	/**
 	 * Creates a new level using a camera, the number of rooms, and the room sizes
@@ -32,11 +35,13 @@ public class Level {
 		rooms = new Room[numOfRooms];
 		int[][] roomDoors = generateLevel(numOfRooms);
 		for (int i = 0; i < rooms.length; i++) {
-			rooms[i] = new Room(roomSizeWidth, roomSizeHeight, roomDoors[i]);
+			rooms[i] = new Room(i, this, roomSizeWidth, roomSizeHeight, roomDoors[i]);
 		}
 		currentRoom = rooms[0];
 		currentRoom.generateRoom(49);
+		currentRoom.load(-1);
 		this.camera = camera;
+		this.levelListeners = new ArrayList<LevelListener>();
 	}
 	
 	public Room getCurrentRoom() {
@@ -45,6 +50,18 @@ public class Level {
 	
 	public Point getPlayerSpawn() {
 		return rooms[0].getPlayerSpawn();
+	}
+	
+	public void nextRoom(int roomId) {
+		int lastRoomId = currentRoom.getId();
+		if (!rooms[roomId].isGenerated()) {
+			currentRoom.generateRoom(49);
+		}
+		currentRoom = rooms[roomId];
+		currentRoom.load(lastRoomId);
+		for (LevelListener ll : levelListeners) {
+			ll.onRoomChange();
+		}
 	}
 	
 	private int[][] generateLevel(int numOfRooms) {
@@ -125,4 +142,7 @@ public class Level {
 		currentRoom.render(gc, interpolation, camera);
 	}
 
+	public void addLevelListener(LevelListener ll) {
+		levelListeners.add(ll);
+	}
 }

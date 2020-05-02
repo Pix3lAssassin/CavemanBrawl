@@ -1,5 +1,7 @@
 package com.pixelcross.cavemanbrawl.levels.tiles;
 
+import com.pixelcross.cavemanbrawl.gfx.Assets;
+
 import javafx.scene.canvas.GraphicsContext;
 import javafx.scene.image.Image;
 
@@ -10,12 +12,10 @@ import javafx.scene.image.Image;
  * 
  */
 public class Tile {
-
-	//STATIC
 	
-	public static Tile[] tiles = new Tile[256];
-	public static Tile grassTile = new GrassTile(0);
-	public static Tile rockTile = new RockTile(1);
+	public static Tile[] tiles;
+	public static Tile groundTile;
+	public static Tile wallTile;
 	
 	//CLASS
 	public static final int TILEWIDTH = 32, TILEHEIGHT = 32;
@@ -33,7 +33,13 @@ public class Tile {
 		this.texture = texture;
 		this.id = id;
 		
-		tiles[id] = this;
+//		tiles[id] = this;
+	}
+	
+	public static void init() {
+		tiles = new Tile[256];
+		groundTile = new GroundTile(Assets.grass[0], 0);
+		wallTile = new WallTile(Assets.walls[6], 0);
 	}
 	
 	/**
@@ -56,6 +62,13 @@ public class Tile {
 	 * @return true if the tile is solid (default false)
 	 */
 	public boolean isSolid() {
+		return false;
+	}
+	
+	/**
+	 * @return true if the tile is a trigger (default false)
+	 */
+	public boolean isTrigger() {
 		return false;
 	}
 	
