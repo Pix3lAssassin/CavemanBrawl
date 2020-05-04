@@ -6,7 +6,7 @@ import javafx.scene.image.PixelWriter;
 import javafx.scene.image.WritableImage;
 
 /**
- * @author Justin Schreiber
+ * @author Justin Schreiber and Ben Wilkin
  *
  * @see https://www.youtube.com/playlist?list=PLah6faXAgguMnTBs3JnEJY0shAc18XYQZ
  *
@@ -23,11 +23,25 @@ public class Assets {
 	 * Initializes all the assets should be called before first game loop
 	 */
 	public static void init() {
-		SpriteSheet sheet = new SpriteSheet(ImageLoader.loadImage("/textures/Caveman Paul (1).png"));
+		SpriteSheet playerSheet = new SpriteSheet(ImageLoader.loadImage("/textures/Caveman Paul (1).png"));
+		SpriteSheet sheet = new SpriteSheet(ImageLoader.loadImage("/textures/town_tiles.png"));
 		
-		player_down = new Image[3];
-		
-		player_down[0] = ImageLoader.convertToFxImage(sheet.crop(0, 0, width, height), 1);
+		for(int i = 0; i<4;i++)
+		{
+		player_down[i] = ImageLoader.convertToFxImage(playerSheet.crop(i*16, 0, width, height), 1);
+		}
+		for(int i = 0; i<4;i++)
+		{
+		player_up[i] = ImageLoader.convertToFxImage(playerSheet.crop(i*16, 16, width, height), 1);
+		}
+		for(int i = 0; i<4;i++)
+		{
+		player_right[i] = ImageLoader.convertToFxImage(playerSheet.crop(i*16, 32, width, height), 1);
+		}
+		for(int i = 0; i<4;i++)
+		{
+		player_left[i] = ImageLoader.convertToFxImage(playerSheet.crop(i*16, 48, width, height), 1);
+		}
 		
 		grass = ImageLoader.convertToFxImage(sheet.crop(0, 16, 16, 16), 4);
 		rock = ImageLoader.convertToFxImage(sheet.crop(0, 0, 16, 16), 4);

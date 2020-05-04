@@ -9,17 +9,17 @@ import javafx.scene.image.Image;
 
 public class PlayerAnimationController{
 	
-	public void PlayerAnimtationController(Player p) {
-		if(p.getxMove() > 0){
+	public PlayerAnimationController(Player p) {
+		if(p.getxMove() > 0.1){
 			Image playerSprite = new Animation(200, Assets.player_right).getCurrentFrame();
 		}
-		else if(p.getxMove() < 0){
+		else if(p.getxMove() < -0.1){
 			Image playerSprite = new Animation(200, Assets.player_left).getCurrentFrame();
 		}
-		else if(p.getyMove() > 0){
+		else if(p.getyMove() > 0.1){
 			Image playerSprite = new Animation(200, Assets.player_up).getCurrentFrame();
 		}
-		else if(p.getyMove() < 0){
+		else if(p.getyMove() < -0.1){
 			Image playerSprite = new Animation(200, Assets.player_down).getCurrentFrame();
 		}
 	}
