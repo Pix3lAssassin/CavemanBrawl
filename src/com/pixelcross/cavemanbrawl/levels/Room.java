@@ -1,7 +1,9 @@
 package com.pixelcross.cavemanbrawl.levels;
 
 import java.awt.Point;
+import java.util.ArrayList;
 
+import com.pixelcross.cavemanbrawl.entities.Entity;
 import com.pixelcross.cavemanbrawl.gfx.Assets;
 import com.pixelcross.cavemanbrawl.gfx.GameCamera;
 import com.pixelcross.cavemanbrawl.levels.tiles.GroundTile;
@@ -30,6 +32,8 @@ public class Room {
 	private Point playerSpawn;
 	private int[] connectedRoomIds;
 	private boolean generated;
+	private Point startPos;
+	ArrayList<Entity> entities;
 	
 	/**
 	 * Creates a Room with a given width and height
@@ -38,6 +42,7 @@ public class Room {
 	 * @param height
 	 */
 	public Room(int id, Level currentLevel, int width, int height, int[] connectedRoomIds) {
+		this.id = id;
 		this.currentLevel = currentLevel;
 		this.width = width;
 		this.height = height;
@@ -49,6 +54,7 @@ public class Room {
 		}
 		this.connectedRoomIds = connectedRoomIds;
 		generated = false;
+		entities = new ArrayList<Entity>();
 	}
 
 	public int getWidth() {
@@ -60,8 +66,24 @@ public class Room {
 	}
 
 	public void load(int lastRoomId) {
+		int lastDoor = -1;
 		if (lastRoomId > -1) {
-			
+			for (int i = 0; i < connectedRoomIds.length; i++) {
+				if (connectedRoomIds[i] == lastRoomId) {
+					lastDoor = i;
+				}
+			}
+		}
+		if (lastDoor == 0) {
+			startPos = new Point(width/2*Tile.TILEWIDTH, Tile.TILEHEIGHT*2);
+		} else if (lastDoor == 1) {
+			startPos = new Point(Tile.TILEWIDTH*width, height/2*Tile.TILEHEIGHT);
+		} else if (lastDoor == 2) {
+			startPos = new Point(width/2*Tile.TILEWIDTH, Tile.TILEHEIGHT*height-8);
+		} else if (lastDoor == 3) {
+			startPos = new Point(Tile.TILEWIDTH*2, height/2*Tile.TILEHEIGHT);
+		} else {
+			startPos = new Point(0, 0);
 		}
 	}
 	
@@ -221,4 +243,7 @@ public class Room {
 		return id;
 	}
 
+	public Point getStartPos() {
+		return startPos;
+	}
 }

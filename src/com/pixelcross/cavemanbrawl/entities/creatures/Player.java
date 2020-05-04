@@ -1,5 +1,6 @@
 package com.pixelcross.cavemanbrawl.entities.creatures;
 
+import java.awt.Point;
 import java.util.ArrayList;
 
 import com.pixelcross.cavemanbrawl.entities.LevelListener;
@@ -72,6 +73,7 @@ public class Player extends Creature implements LevelListener {
 			if (t != null && t.isTrigger()) {
 				Trigger tile = (Trigger) t;
 				tile.trigger();
+				break;
 			}
 		}
 	}
@@ -109,6 +111,9 @@ public class Player extends Creature implements LevelListener {
 	@Override
 	public void onRoomChange() {
 		//TODO
-		currentLevel.getCurrentRoom();
+		Point startingPoint = currentLevel.getCurrentRoom().getStartPos();
+		xMove = 0;
+		yMove = 0;
+		setPos(startingPoint.x, startingPoint.y);
 	}
 }
