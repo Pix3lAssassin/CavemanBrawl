@@ -54,10 +54,10 @@ public class Level {
 	
 	public void nextRoom(int roomId) {
 		int lastRoomId = currentRoom.getId();
-		if (!rooms[roomId].isGenerated()) {
+		currentRoom = rooms[roomId];
+		if (!currentRoom.isGenerated()) {
 			currentRoom.generateRoom(49);
 		}
-		currentRoom = rooms[roomId];
 		currentRoom.load(lastRoomId);
 		for (LevelListener ll : levelListeners) {
 			ll.onRoomChange();
