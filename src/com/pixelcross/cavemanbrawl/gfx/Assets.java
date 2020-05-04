@@ -23,7 +23,7 @@ public class Assets {
 	 * Initializes all the assets should be called before first game loop
 	 */
 	public static void init() {
-		SpriteSheet sheet = new SpriteSheet(ImageLoader.loadImage("/textures/town_tiles.png"));
+		SpriteSheet sheet = new SpriteSheet(ImageLoader.loadImage("/textures/Caveman Paul (1).png"));
 		
 		player_down = new Image[3];
 		
