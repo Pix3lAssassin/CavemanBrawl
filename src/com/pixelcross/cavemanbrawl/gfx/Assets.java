@@ -28,19 +28,19 @@ public class Assets {
 		
 		for(int i = 0; i<4;i++)
 		{
-		player_down[i] = ImageLoader.convertToFxImage(playerSheet.crop(i*16, 0, width, height), 1);
+		player_down[i] = ImageLoader.convertToFxImage(playerSheet.crop(i*16, 0, width, height), 4);
 		}
 		for(int i = 0; i<4;i++)
 		{
-		player_up[i] = ImageLoader.convertToFxImage(playerSheet.crop(i*16, 16, width, height), 1);
+		player_up[i] = ImageLoader.convertToFxImage(playerSheet.crop(i*16, 16, width, height), 4);
 		}
 		for(int i = 0; i<4;i++)
 		{
-		player_right[i] = ImageLoader.convertToFxImage(playerSheet.crop(i*16, 32, width, height), 1);
+		player_right[i] = ImageLoader.convertToFxImage(playerSheet.crop(i*16, 32, width, height), 4);
 		}
 		for(int i = 0; i<4;i++)
 		{
-		player_left[i] = ImageLoader.convertToFxImage(playerSheet.crop(i*16, 48, width, height), 1);
+		player_left[i] = ImageLoader.convertToFxImage(playerSheet.crop(i*16, 48, width, height), 4);
 		}
 		
 		grass = ImageLoader.convertToFxImage(sheet.crop(0, 16, 16, 16), 4);
