@@ -14,7 +14,6 @@ public class PlayerAnimationController  extends AnimationController{
 	Animation playerDown;
 	Animation currentAnimation;
 	Player p;
-	
 	public PlayerAnimationController(Player p) {
 		this.p = p;
 		
@@ -29,6 +28,7 @@ public class PlayerAnimationController  extends AnimationController{
 	}
 	@Override
 	public Image getFrame() {
+	
 		if(p.getxMove() > 0.1 && currentAnimation != playerRight) {
 			playerRight.setFrame(0);
 			currentAnimation = playerRight;
@@ -36,28 +36,33 @@ public class PlayerAnimationController  extends AnimationController{
 			currentAnimation.tick();
 			return currentAnimation.getCurrentFrame();
 		}
-		else if(p.getxMove() < 0.1 && currentAnimation != playerLeft) {
+		else if(p.getxMove() < -0.1 && currentAnimation != playerLeft) {
 			playerLeft.setFrame(0);
 			currentAnimation = playerLeft;
 			
 			currentAnimation.tick();
 			return currentAnimation.getCurrentFrame();
 		}
-		else if(p.getyMove() > 0.1 && currentAnimation != playerUp) {
+		else if(p.getyMove() < -0.1 && currentAnimation != playerUp) {
 			playerUp.setFrame(0);
 			currentAnimation = playerUp;
 			
 			currentAnimation.tick();
 			return currentAnimation.getCurrentFrame();
 		}
-		else if(p.getyMove() < 0.1 && currentAnimation != playerDown) {
+		else if(p.getyMove() > 0.1 && currentAnimation != playerDown) {
 			playerDown.setFrame(0);
 			currentAnimation = playerDown;
 			
 			currentAnimation.tick();
 			return currentAnimation.getCurrentFrame();
 		}
-		else return playerDown.getFrame(0);
+		else if (p.getxMove() > 0.1 || p.getxMove() < -0.1 || p.getyMove() < -0.1 || p.getyMove() > 0.1) {
+			currentAnimation.tick();
+			return currentAnimation.getCurrentFrame();
+		}
+		else
+			return playerDown.getFrame(0);
 		
 		
 	}
