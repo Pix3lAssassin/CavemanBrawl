@@ -6,7 +6,7 @@ import javafx.scene.image.PixelWriter;
 import javafx.scene.image.WritableImage;
 
 /**
- * @author Justin Schreiber
+ * @author Justin Schreiber and Ben Wilkin
  *
  * @see https://www.youtube.com/playlist?list=PLah6faXAgguMnTBs3JnEJY0shAc18XYQZ
  *
@@ -24,6 +24,7 @@ public class Assets {
 	 * Initializes all the assets should be called before first game loop
 	 */
 	public static void init() {
+		SpriteSheet playerSheet = new SpriteSheet(ImageLoader.loadImage("/textures/Caveman Paul (1).png"));
 		SpriteSheet sheet = new SpriteSheet(ImageLoader.loadImage("/textures/town_tiles.png"));
 		SpriteSheet grassSheet = new SpriteSheet(ImageLoader.loadImage("/textures/CavemanBrawlGrassTiles.png"));
 		SpriteSheet wallSheet = new SpriteSheet(ImageLoader.loadImage("/textures/CavemanBrawlWallTiles.png"));
