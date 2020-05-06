@@ -34,6 +34,7 @@ public class GameState extends State {
 		level = new Level(camera, 6, 80, 60);
 		Point playerSpawn = level.getPlayerSpawn();
 		player = new Player(level, input, playerSpawn.x * Tile.TILEWIDTH, playerSpawn.y * Tile.TILEHEIGHT);
+		level.addLevelListener(player);
 	}
 
 	@Override

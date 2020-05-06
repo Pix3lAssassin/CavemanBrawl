@@ -9,34 +9,24 @@ import javafx.application.Application;
 import javafx.scene.Group;
 import javafx.scene.canvas.Canvas;
 import javafx.scene.canvas.GraphicsContext;
-import javafx.scene.paint.Color;
-import javafx.scene.text.Font;
-import javafx.scene.text.FontWeight;
 import javafx.stage.Stage;
 
-/**
- * @author Justin Schreiber
- *
- * Launcher that handles javafx
- */
-public class CavemanBrawlApp extends Application {
-
-	//Games width and height
+public class DebugWindow extends Application {
+	//Debug width and height
 	public static final int WIDTH = 800, HEIGHT = 600;
-	private static DebugWindow dw = null;
+	private GameState gs;
 	
-	public static void main(String[] args) {
+	public DebugWindow(GameState gs) {
+		this.gs = gs;
 		launch();
 	}
 
 	@Override
 	public void start(Stage primaryStage) throws Exception {
-		primaryStage.setTitle("Caveman Brawl");
+		primaryStage.setTitle("Debugger");
 		
 		//Initialize assets and scenes
 		Group root = new Group();
-		Assets.init();
-		GameState gs = new GameState(root);
 		primaryStage.setScene(gs);
 
 		//Handles the current state
@@ -103,4 +93,5 @@ public class CavemanBrawlApp extends Application {
 		
 		primaryStage.show();
 	}
+
 }
