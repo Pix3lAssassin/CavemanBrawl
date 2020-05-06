@@ -155,13 +155,13 @@ public class MapGenerator {
 							borderedMap[x][y] = 1;
 						}
 					}
-					if (y == 1 && x > borderedMap.length/2-2 && x < borderedMap.length/2+2 && doors[0]) {
+					if (y == 1 && x > borderedMap.length/2-3 && x < borderedMap.length/2+3 && doors[0]) {
 						borderedMap[x][y] = 0;
-					} else if (x == borderedMap.length-2 && y > borderedMap[x].length/2-2 && y < borderedMap[x].length/2+2 && doors[1]) {
+					} else if (x == borderedMap.length-2 && y > borderedMap[x].length/2-3 && y < borderedMap[x].length/2+3 && doors[1]) {
 						borderedMap[x][y] = 0;
-					} else if (y == borderedMap[x].length-2 && x > borderedMap.length/2-2 && x < borderedMap.length/2+2 && doors[2]) {
+					} else if (y == borderedMap[x].length-2 && x > borderedMap.length/2-3 && x < borderedMap.length/2+3 && doors[2]) {
 						borderedMap[x][y] = 0;
-					} else if (x == 1 && y > borderedMap[x].length/2-2 && y < borderedMap[x].length/2+2 && doors[3]) {
+					} else if (x == 1 && y > borderedMap[x].length/2-3 && y < borderedMap[x].length/2+3 && doors[3]) {
 						borderedMap[x][y] = 0;
 					}
 				}

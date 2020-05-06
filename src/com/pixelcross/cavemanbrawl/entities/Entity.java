@@ -39,6 +39,7 @@ public abstract class Entity {
 		this.height = height;
 		
 		bounds = new Rectangle(0, 0, width, height);
+		components = new ArrayList<Component>();
 	}
 
 	public double getX() {

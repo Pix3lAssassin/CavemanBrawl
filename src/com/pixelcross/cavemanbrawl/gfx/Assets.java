@@ -28,7 +28,6 @@ public class Assets {
 		SpriteSheet sheet = new SpriteSheet(ImageLoader.loadImage("/textures/town_tiles.png"));
 		SpriteSheet grassSheet = new SpriteSheet(ImageLoader.loadImage("/textures/CavemanBrawlGrassTiles.png"));
 		SpriteSheet wallSheet = new SpriteSheet(ImageLoader.loadImage("/textures/CavemanBrawlWallTiles.png"));
-		SpriteSheet playerSheet = new SpriteSheet(ImageLoader.loadImage("/textures/Caveman Paul (1).png"));
 		
 		player_down = new Image[4];
 		player_up = new Image[4];

@@ -3,6 +3,7 @@ package com.pixelcross.cavemanbrawl.entities.creatures;
 import java.awt.Point;
 import java.util.ArrayList;
 
+import com.pixelcross.cavemanbrawl.components.PlayerAnimationController;
 import com.pixelcross.cavemanbrawl.entities.LevelListener;
 import com.pixelcross.cavemanbrawl.entities.Trigger;
 import com.pixelcross.cavemanbrawl.gfx.Assets;
@@ -40,6 +41,8 @@ public class Player extends Creature implements LevelListener {
 		bounds.height = 40;
 		
 		this.input = input;
+		PlayerAnimationController playerAnimation = new PlayerAnimationController(this);
+		components.add(playerAnimation);
 	}
 
 	/* (non-Javadoc)
@@ -98,10 +101,10 @@ public class Player extends Creature implements LevelListener {
 	 */
 	@Override
 	public void render(GraphicsContext gc, double interpolation, GameCamera camera) {
-		gc.drawImage(Assets.player, x - camera.getxOffset(), y - camera.getyOffset(), width, height);
+		gc.drawImage(getComponent(PlayerAnimationController.class).getFrame(), x - camera.getxOffset(), y - camera.getyOffset(), width, height);
 
-		gc.setStroke(Color.RED);
-		gc.strokeRect(x + bounds.x - camera.getxOffset(), y + bounds.y - camera.getyOffset(), bounds.width, bounds.height);
+//		gc.setStroke(Color.RED);
+//		gc.strokeRect(x + bounds.x - camera.getxOffset(), y + bounds.y - camera.getyOffset(), bounds.width, bounds.height);
 	}
 
 	public void setCurrentLevel(Level level) {
