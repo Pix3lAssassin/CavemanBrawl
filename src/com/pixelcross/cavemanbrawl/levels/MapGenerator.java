@@ -55,8 +55,8 @@ public class MapGenerator {
 		 * @param randomFillPercent (The density of this map (Higher is more dense))
 		 */
 		public MapGenerator(int width, int height, int randomFillPercent) {
-			this.width = width - (borderSize * 2);
-			this.height = height - (borderSize * 2);
+			this.width = width;
+			this.height = height;
 			this.randomFillPercent = randomFillPercent;
 			useRandomSeed = true;
 		}
@@ -135,15 +135,14 @@ public class MapGenerator {
 				map = cleanMap(map);
 			}
 			
-			//Fix border in case of over smoothing
-			int adjustedWidth = width - 2;
-			int adjustedHeight = height - 2;
+			//Fix border in case of over smoothing and add next level tiles
+			int adjustedWidth = width - borderSize;
+			int adjustedHeight = height - borderSize;
 			for (int x = 0; x < borderedMap.length; x ++) {
 				for (int y = 0; y < borderedMap[x].length; y ++) {
 					if (x >= 1 && x < adjustedWidth + 1 && y >= 1 && y < adjustedHeight + 1) {
 						borderedMap[x][y] = map[x-1][y-1];
-					}
-					else {
+					} else {
 						if (y == 0 && x > borderedMap.length/2-4 && x < borderedMap.length/2+4 && doors[0]) {
 							borderedMap[x][y] = 0;
 						} else if (x == borderedMap.length-1 && y > borderedMap[x].length/2-4 && y < borderedMap[x].length/2+4 && doors[1]) {
@@ -155,6 +154,15 @@ public class MapGenerator {
 						} else {
 							borderedMap[x][y] = 1;
 						}
+					}
+					if (y == 1 && x > borderedMap.length/2-3 && x < borderedMap.length/2+3 && doors[0]) {
+						borderedMap[x][y] = 0;
+					} else if (x == borderedMap.length-2 && y > borderedMap[x].length/2-3 && y < borderedMap[x].length/2+3 && doors[1]) {
+						borderedMap[x][y] = 0;
+					} else if (y == borderedMap[x].length-2 && x > borderedMap.length/2-3 && x < borderedMap.length/2+3 && doors[2]) {
+						borderedMap[x][y] = 0;
+					} else if (x == 1 && y > borderedMap[x].length/2-3 && y < borderedMap[x].length/2+3 && doors[3]) {
+						borderedMap[x][y] = 0;
 					}
 				}
 			}

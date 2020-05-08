@@ -35,4 +35,11 @@ public class Animation
 	public Image getCurrentFrame() {
 		return frames[index];
 	}
+	public void setFrame(int i) {
+		index = i;
+		
+	}
+	public Image getFrame(int i) {
+		return frames[i];
+	}
 }

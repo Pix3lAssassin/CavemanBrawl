@@ -2,10 +2,12 @@ package com.pixelcross.cavemanbrawl.levels.tiles;
 
 import com.pixelcross.cavemanbrawl.gfx.Assets;
 
-public class RockTile extends Tile {
+import javafx.scene.image.Image;
 
-	public RockTile(int id) {
-		super(Assets.rock, id);
+public class WallTile extends Tile {
+
+	public WallTile(Image texture, int id) {
+		super(texture, id);
 	}
 
 	@Override

@@ -39,6 +39,7 @@ public abstract class Entity {
 		this.height = height;
 		
 		bounds = new Rectangle(0, 0, width, height);
+		components = new ArrayList<Component>();
 	}
 
 	public double getX() {
@@ -47,6 +48,11 @@ public abstract class Entity {
 
 	public void setX(double x) {
 		this.x = x;
+	}
+
+	public void setPos(double x, double y) {
+		this.x = x;
+		this.y = y;
 	}
 
 	public double getY() {

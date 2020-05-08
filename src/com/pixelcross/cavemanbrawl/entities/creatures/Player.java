@@ -1,10 +1,15 @@
 package com.pixelcross.cavemanbrawl.entities.creatures;
 
+import java.awt.Point;
 import java.util.ArrayList;
 
+import com.pixelcross.cavemanbrawl.components.PlayerAnimationController;
+import com.pixelcross.cavemanbrawl.entities.LevelListener;
+import com.pixelcross.cavemanbrawl.entities.Trigger;
 import com.pixelcross.cavemanbrawl.gfx.Assets;
 import com.pixelcross.cavemanbrawl.gfx.GameCamera;
 import com.pixelcross.cavemanbrawl.levels.Level;
+import com.pixelcross.cavemanbrawl.levels.tiles.Tile;
 
 import javafx.scene.canvas.GraphicsContext;
 import javafx.scene.paint.Color;
@@ -17,7 +22,7 @@ import javafx.scene.paint.Color;
  * <br><br>
  * Controls the player via keyboard and mouse inputs and renders the player to the screen
  */
-public class Player extends Creature {
+public class Player extends Creature implements LevelListener {
 
 	private ArrayList<String> input;
 	
@@ -36,6 +41,8 @@ public class Player extends Creature {
 		bounds.height = 40;
 		
 		this.input = input;
+		PlayerAnimationController playerAnimation = new PlayerAnimationController(this);
+		components.add(playerAnimation);
 	}
 
 	/* (non-Javadoc)
@@ -45,10 +52,35 @@ public class Player extends Creature {
 	public void update() {
 		getInput();
 		move();
+		checkForTriggers();
 		yMove *= 0.7;
 		xMove *= 0.7;
 	}
 
+	private void checkForTriggers() {
+		int[] collisionCorners = new int[4];
+		collisionCorners[0] = (int) (x + bounds.x) / Tile.TILEWIDTH;
+		collisionCorners[1] = (int) (x + bounds.x + bounds.width) / Tile.TILEWIDTH;
+		collisionCorners[2] = (int) (y + bounds.y) / Tile.TILEHEIGHT;
+		collisionCorners[3] = (int) (y + bounds.y + bounds.height) / Tile.TILEHEIGHT;
+		int collisionWidth = collisionCorners[1] - collisionCorners[0]+1;
+		int collisionHeight = collisionCorners[3] - collisionCorners[2]+1;
+
+		ArrayList<Tile> collidingTiles = new ArrayList<Tile>();
+		for (int tileY = collisionCorners[2]; tileY < collisionCorners[2]+collisionHeight; tileY++) {
+			for (int tileX = collisionCorners[0]; tileX < collisionCorners[0]+collisionWidth; tileX++) {
+				collidingTiles.add(currentLevel.getCurrentRoom().getTile(1, tileX, tileY));
+			}
+		}
+		for (Tile t : collidingTiles) {
+			if (t != null && t.isTrigger()) {
+				Trigger tile = (Trigger) t;
+				tile.trigger();
+				break;
+			}
+		}
+	}
+	
 	/**
 	 * Handle player inputs
 	 */
@@ -69,13 +101,22 @@ public class Player extends Creature {
 	 */
 	@Override
 	public void render(GraphicsContext gc, double interpolation, GameCamera camera) {
-		gc.drawImage(Assets.grass, x - camera.getxOffset(), y - camera.getyOffset(), width, height);
+		gc.drawImage(getComponent(PlayerAnimationController.class).getFrame(), x - camera.getxOffset(), y - camera.getyOffset(), width, height);
 
-		gc.setStroke(Color.RED);
-		gc.strokeRect(x + bounds.x - camera.getxOffset(), y + bounds.y - camera.getyOffset(), bounds.width, bounds.height);
+//		gc.setStroke(Color.RED);
+//		gc.strokeRect(x + bounds.x - camera.getxOffset(), y + bounds.y - camera.getyOffset(), bounds.width, bounds.height);
 	}
 
 	public void setCurrentLevel(Level level) {
 		currentLevel = level;
+	}
+
+	@Override
+	public void onRoomChange() {
+		//TODO
+		Point startingPoint = currentLevel.getCurrentRoom().getStartPos();
+		xMove = 0;
+		yMove = 0;
+		setPos(startingPoint.x, startingPoint.y);
 	}
 }
