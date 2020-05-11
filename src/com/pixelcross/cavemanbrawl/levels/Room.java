@@ -64,6 +64,10 @@ public class Room {
 	public int getHeight() {
 		return height;
 	}
+	
+	public ArrayList<Entity> getEntities(){
+		return this.entities;
+	}
 
 	public void load(int lastRoomId) {
 		int lastDoor = -1;

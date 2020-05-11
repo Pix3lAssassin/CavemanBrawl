@@ -3,6 +3,8 @@ package com.pixelcross.cavemanbrawl.entities.pickupables;
 /**
  * @author Colin Kugler
  *
+ *	Weapons class that implements Pickupables
+ *	will be used for weapons classes for the players character to be able to attack
  */
 public abstract class Weapon extends Pickupables {	// abstract
 	protected double weapon_health;	  // how much health does the weapon have(how long until it breaks)
