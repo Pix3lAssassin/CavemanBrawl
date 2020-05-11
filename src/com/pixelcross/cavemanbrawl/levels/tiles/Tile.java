@@ -55,7 +55,9 @@ public class Tile {
 	 * @param y (Where to draw the tile in the y direction)
 	 */
 	public void render(GraphicsContext gc, int x, int y) {
-		gc.drawImage(texture, x, y, TILEWIDTH, TILEHEIGHT);
+		if (texture != null) {
+			gc.drawImage(texture, x, y, TILEWIDTH, TILEHEIGHT);
+		}
 	}
 	
 	/**

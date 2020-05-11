@@ -9,9 +9,9 @@ import java.util.List;
 import com.pixelcross.cavemanbrawl.gfx.ImageLoader;
 import com.pixelcross.cavemanbrawl.levels.MapGenerator;
 import com.pixelcross.cavemanbrawl.levels.RoomGenerator;
-import com.pixelcross.cavemanbrawl.main.Timer;
 import com.pixelcross.cavemanbrawl.neuralnetwork.fullyconnectednetwork.Network;
 import com.pixelcross.cavemanbrawl.neuralnetwork.trainset.TrainSet;
+import com.pixelcross.cavemanbrawl.util.Timer;
 
 import javafx.scene.Node;
 import javafx.scene.Parent;
@@ -309,8 +309,8 @@ public class TestState extends State implements Runnable {
 		spawnableAreaMap = rg.getSpawnableArea();
 		spawnableArea = ImageLoader.convertToFxImage(getImageFromArray(getSpawnablePixelsFromMap(spawnableAreaMap), spawnableAreaMap.length, spawnableAreaMap[0].length), scale);
 
-		spawnableArea2 = rg.getAvailableSpawns();
 		spawnMap = rg.generateSpawns(doors);
+		spawnableArea2 = rg.getAvailableSpawns();
 		spawns = ImageLoader.convertToFxImage(getImageFromArray(getSpawnPixelsFromMap(spawnMap), spawnMap.length, spawnMap[0].length), scale);
 		
 		seedLabel.setText(String.format("Seed: %s", seed));
@@ -330,8 +330,8 @@ public class TestState extends State implements Runnable {
 		spawnableAreaMap = rg.getSpawnableArea();
 		spawnableArea = ImageLoader.convertToFxImage(getImageFromArray(getSpawnablePixelsFromMap(spawnableAreaMap), spawnableAreaMap.length, spawnableAreaMap[0].length), scale);
 
-		spawnableArea2 = rg.getAvailableSpawns();
 		spawnMap = rg.generateSpawns(doors);
+		spawnableArea2 = rg.getAvailableSpawns();
 		spawns = ImageLoader.convertToFxImage(getImageFromArray(getSpawnPixelsFromMap(spawnMap), spawnMap.length, spawnMap[0].length), scale);
 
 		seedLabel.setText(String.format("Seed: %s", seed));

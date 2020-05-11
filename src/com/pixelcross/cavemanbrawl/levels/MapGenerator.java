@@ -8,7 +8,7 @@ import java.util.List;
 import java.util.Queue;
 import java.util.Random;
 
-import com.pixelcross.cavemanbrawl.main.GameAdjustment;
+import com.pixelcross.cavemanbrawl.util.GameAdjustment;
 
 
 /**

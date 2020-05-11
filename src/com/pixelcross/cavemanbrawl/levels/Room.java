@@ -4,11 +4,13 @@ import java.awt.Point;
 import java.util.ArrayList;
 
 import com.pixelcross.cavemanbrawl.entities.Entity;
+import com.pixelcross.cavemanbrawl.entities.Spawner;
 import com.pixelcross.cavemanbrawl.gfx.Assets;
 import com.pixelcross.cavemanbrawl.gfx.GameCamera;
 import com.pixelcross.cavemanbrawl.levels.tiles.GroundTile;
 import com.pixelcross.cavemanbrawl.levels.tiles.GroundTilePattern;
 import com.pixelcross.cavemanbrawl.levels.tiles.NextRoomTile;
+import com.pixelcross.cavemanbrawl.levels.tiles.RaccoonSpawnTile;
 import com.pixelcross.cavemanbrawl.levels.tiles.WallTile;
 import com.pixelcross.cavemanbrawl.levels.tiles.WallTilePattern;
 import com.pixelcross.cavemanbrawl.levels.tiles.Tile;
@@ -84,6 +86,14 @@ public class Room {
 			startPos = new Point(Tile.TILEWIDTH*2, height/2*Tile.TILEHEIGHT);
 		} else {
 			startPos = new Point(0, 0);
+		}
+		for (int x = 0; x < width; x ++) {
+			for (int y = 0; y < height; y ++) {
+				Spawner spawner = (Spawner) getTile(2, x, y);
+				if (spawner != null) {
+					spawner.spawn();
+				}
+			}
 		}
 	}
 	
@@ -175,6 +185,8 @@ public class Room {
 			for (int y = 0; y < height; y ++) {
 				if (spawns[x][y] == 1) {
 					playerSpawn = new Point(x+2, y+2);
+				} else if (spawns[x][y] == 2) {
+					tileLayers[2].setTile(x, y, new RaccoonSpawnTile(currentLevel, x, y));
 				}
 			}
 		}
@@ -184,7 +196,9 @@ public class Room {
 	 * Updates the room
 	 */
 	public void update() {
-		
+		for (Entity e : entities) {
+			e.update();
+		}
 	}
 	
 	/**
@@ -209,6 +223,9 @@ public class Room {
 					}
 				}
 			}
+		}
+		for (Entity e : entities) {
+			e.render(gc, interpolation, camera);
 		}
 	}
 
@@ -245,5 +262,13 @@ public class Room {
 
 	public Point getStartPos() {
 		return startPos;
+	}
+
+	public ArrayList<Entity> getEntities() {
+		return entities;
+	}
+	
+	public void addEntity(Entity e) {
+		entities.add(e);
 	}
 }
