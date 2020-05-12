@@ -12,7 +12,6 @@ import com.pixelcross.cavemanbrawl.entities.Entity;
 public abstract class Pickupables extends Entity {
 
 	protected boolean isPickupable; // check to see if the item is able to be picked up.
-	protected ArrayList<Entity> items; // list of items //remove, room handles
 
 	public Pickupables(double x, double y, int width, int height) {
 		super(x, y, width, height); // dimensions of Pickupable object

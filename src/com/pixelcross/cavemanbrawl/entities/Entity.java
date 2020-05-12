@@ -79,6 +79,35 @@ public abstract class Entity {
 		this.height = height;
 	}
 	
+	/*	@Author Colin Kugler
+	 *  Returns a new rectangle of the area around the rectangle(entity) of an object
+	 */
+	
+	public Rectangle getCollisionArea(double xoff, yoff) {
+		return new Rectangle((int) (x + bounds.x + xoff), (int) (y + bounds.y + yoff), bounds.width, bounds.height);
+	}
+	
+	/* @Author Colin Kugler
+	 * 
+	 * first checks if the entity is of type pickupable for use in method. if its not it is ignored
+	 * method that will check if a collision occurs between two objects and return true or false if not
+	 * 
+	 */
+	
+	public checkCollisionsForPickup(double xoff, double yoff, int tilex, int tiley) {
+		for (Entity en : level.getCurrentRoom.getEntities()){
+			if(en.equals(this)) {
+				continue;
+			}
+			if(en.equals(Pickupables)) { 
+				if (en.getCollisionArea(0,0).intersects(getCollisionArea(xoff,yoff))) {
+				return true;
+			}
+			
+		}
+		return false;
+	}
+	
 	/**
 	 * Gets a component based on the components class ex. getComponent(Collider.class)
 	 * 
