@@ -68,6 +68,9 @@ public class Player extends Creature implements LevelListener {
 		xMove *= 0.7;
 	}
 
+	/**
+	 * Check for collision with trigger tiles
+	 */
 	private void checkForTriggers() {
 		int[] collisionCorners = new int[4];
 		collisionCorners[0] = (int) (x + bounds.x) / Tile.TILEWIDTH;

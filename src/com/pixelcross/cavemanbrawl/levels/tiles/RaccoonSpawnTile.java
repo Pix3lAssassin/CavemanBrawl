@@ -3,6 +3,11 @@ package com.pixelcross.cavemanbrawl.levels.tiles;
 import com.pixelcross.cavemanbrawl.entities.creatures.Raccoon;
 import com.pixelcross.cavemanbrawl.levels.Level;
 
+/**
+ * @author Justin Schreiber
+ *
+ * A spawn tile that spawns a raccoon
+ */
 public class RaccoonSpawnTile extends SpawnTile {
 
 	public RaccoonSpawnTile(Level level, int x, int y) {

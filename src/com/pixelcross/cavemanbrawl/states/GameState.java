@@ -54,6 +54,11 @@ public class GameState extends State {
 		renderUI(gc);
 	}
 
+	/**
+	 * Renders UI elements to the screen
+	 * 
+	 * @param gc
+	 */
 	private void renderUI(GraphicsContext gc) {
 		gc.setFill( Color.BLACK );
 	    Font theFont = Font.font( "Times New Roman", FontWeight.BOLD, 24 );

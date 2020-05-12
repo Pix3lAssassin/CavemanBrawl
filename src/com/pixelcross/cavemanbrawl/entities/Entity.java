@@ -6,6 +6,7 @@ import java.util.ArrayList;
 import java.util.List;
 
 import com.pixelcross.cavemanbrawl.components.Component;
+import com.pixelcross.cavemanbrawl.entities.pickupables.Pickupables;
 import com.pixelcross.cavemanbrawl.gfx.GameCamera;
 import com.pixelcross.cavemanbrawl.levels.Level;
 import com.pixelcross.cavemanbrawl.util.Vector;
@@ -30,6 +31,7 @@ public abstract class Entity {
 	/**
 	 * An interactive object in the game world
 	 * 
+	 * @param level (The level that the Entity belongs to)
 	 * @param x (The starting x position of the Entity)
 	 * @param y (The starting y position of the Entity)
 	 * @param width (The width of the Entity)
@@ -84,30 +86,30 @@ public abstract class Entity {
 		this.height = height;
 	}
 	
-	/*	@Author Colin Kugler
+	/**
+	 * 	@Author Colin Kugler
 	 *  Returns a new rectangle of the area around the rectangle(entity) of an object
 	 */
-	
-	public Rectangle getCollisionArea(double xoff, yoff) {
-		return new Rectangle((int) (x + bounds.x + xoff), (int) (y + bounds.y + yoff), bounds.width, bounds.height);
+	public Rectangle getCollisionArea(double xOff, double yOff) {
+		return new Rectangle((int) (x + bounds.x + xOff), (int) (y + bounds.y + yOff), bounds.width, bounds.height);
 	}
 	
-	/* @Author Colin Kugler
+	/** 
+	 * @Author Colin Kugler
 	 * 
 	 * first checks if the entity is of type pickupable for use in method. if its not it is ignored
 	 * method that will check if a collision occurs between two objects and return true or false if not
-	 * 
 	 */
-	
-	public checkCollisionsForPickup(double xoff, double yoff, int tilex, int tiley) {
-		for (Entity en : level.getCurrentRoom.getEntities()){
+	public boolean checkCollisionsForPickup(double xOff, double yOff, int tileX, int tileY) {
+		for (Entity en : currentLevel.getCurrentRoom().getEntities()){
 			if(en.equals(this)) {
 				continue;
 			}
-			if(en.equals(Pickupables)) { 
-				if (en.getCollisionArea(0,0).intersects(getCollisionArea(xoff,yoff))) {
-				return true;
-			}
+			try {
+				Pickupables p = (Pickupables) en;
+				if (en.getCollisionArea(0,0).intersects(getCollisionArea(xOff,yOff))) 
+					return true;
+			} catch(ClassCastException cce) {}
 			
 		}
 		return false;
@@ -163,6 +165,10 @@ public abstract class Entity {
 		return bounds;
 	}
 	
+	/**
+	 * @param coords
+	 * @return a vector to the specified coords
+	 */
 	public Vector getVectorTo(Point2D.Double coords) {
 		Point2D.Double localCoords = getCenterPos();
 		double distX = coords.x - localCoords.x;
@@ -170,6 +176,9 @@ public abstract class Entity {
 		return new Vector(distX, distY);
 	}
 	
+	/**
+	 * @return the center of this entity
+	 */
 	public Point2D.Double getCenterPos() {
 		return new Point2D.Double(x + bounds.x + bounds.width/2, y + bounds.y + bounds.height/2);
 	}

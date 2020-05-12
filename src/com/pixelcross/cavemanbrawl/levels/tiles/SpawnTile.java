@@ -7,6 +7,11 @@ import com.pixelcross.cavemanbrawl.levels.Room;
 
 import javafx.scene.image.Image;
 
+/**
+ * @author Justin Schreiber
+ *
+ * A tile that will spawn entities on room loads
+ */
 public abstract class SpawnTile extends Tile implements Spawner {
 
 	protected Level level;

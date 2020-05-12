@@ -9,29 +9,30 @@ import com.pixelcross.cavemanbrawl.levels.Level;
 import javafx.scene.canvas.GraphicsContext;
 
 /**
- * @author Justin Schreiber
+ * @author Colin Kugler
  *
- * A claw weapon
+ * A club weapon
  */
-public class Claw extends Weapon {
-
-	public Claw(Level level) {
-		super(level, 0, 0, 32, 32, 10, 10);
+public class Club extends Weapon {
+	
+	public Club(Level level) {
+		super(level, 0, 0, 32, 32, 100, 50);
 	}
 
 	@Override
-	public Claw pickup() {
-		return this;
+	public <T extends Pickupables> T pickup() {
+		return null;
 	}
 
 	@Override
 	public void update() {
-		
 	}
 
 	@Override
 	public void render(GraphicsContext gc, double interpolation, GameCamera camera) {
 		gc.drawImage(Assets.placeHolder, x - camera.getxOffset(), y - camera.getyOffset(), width, height);
 	}
+	
+	
 
 }

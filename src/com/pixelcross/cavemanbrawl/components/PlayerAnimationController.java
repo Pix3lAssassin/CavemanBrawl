@@ -1,4 +1,3 @@
-// Ben Wilkin
 package com.pixelcross.cavemanbrawl.components;
 
 import com.pixelcross.cavemanbrawl.entities.creatures.Player;
@@ -7,6 +6,11 @@ import com.pixelcross.cavemanbrawl.gfx.Assets;
 
 import javafx.scene.image.Image;
 
+/**
+ * @author Ben Wilkin
+ *
+ * Defines rules for updating player animations
+ */
 public class PlayerAnimationController extends AnimationController {
 	Animation playerLeft;
 	Animation playerRight;
@@ -15,6 +19,9 @@ public class PlayerAnimationController extends AnimationController {
 	Animation currentAnimation;
 	Player p;
 
+	/**
+	 * @param p (The player that the controller should be using to determine the correct frame)
+	 */
 	public PlayerAnimationController(Player p) {
 		this.p = p;
 

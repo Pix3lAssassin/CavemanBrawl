@@ -67,10 +67,11 @@ public class Room {
 		return height;
 	}
 	
-	public ArrayList<Entity> getEntities(){
-		return this.entities;
-	}
-
+	/**
+	 * Loads the new room by setting the starting position for the player and spawning entities
+	 * 
+	 * @param lastRoomId (The id of the last room)
+	 */
 	public void load(int lastRoomId) {
 		int lastDoor = -1;
 		if (lastRoomId > -1) {

@@ -288,6 +288,9 @@ public class RoomGenerator {
 		return wallCount;
 	}
 
+	/**
+	 * @param doors (An array that stores which doors are open)
+	 */
 	private void updateAvailableSpawns(boolean[] doors) {
 		List<Point> invalidSpawnPoints = new ArrayList<Point>();
 		List<Point> additionalPoints;

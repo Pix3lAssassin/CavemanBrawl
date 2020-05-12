@@ -29,8 +29,7 @@ public abstract class Pickupables extends Entity {
 
 	public List<Entity> getCollidingEntities(Entity entity, double offsetX, double offsetY) {
 		// stubbed
-		items.add(entity);
-		return items;
+		return null;
 	}
 
 	public void setPickupable(boolean pickup) {

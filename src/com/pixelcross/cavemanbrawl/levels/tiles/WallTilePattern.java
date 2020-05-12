@@ -4,6 +4,11 @@ import com.pixelcross.cavemanbrawl.gfx.Assets;
 
 import javafx.scene.image.Image;
 
+/**
+ * @author Justin Schreiber
+ *
+ * Defines rules for displaying the wall tiles
+ */
 public class WallTilePattern implements TilePattern {
 
 	Image[] walls;

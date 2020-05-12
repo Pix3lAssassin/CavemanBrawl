@@ -1,12 +1,9 @@
 package com.pixelcross.cavemanbrawl.entities.creatures;
 
-import com.pixelcross.cavemanbrawl.components.AnimationController;
-import com.pixelcross.cavemanbrawl.components.PlayerAnimationController;
 import com.pixelcross.cavemanbrawl.components.RaccoonAnimationController;
 import com.pixelcross.cavemanbrawl.components.WeaponSlot;
 import com.pixelcross.cavemanbrawl.entities.Entity;
 import com.pixelcross.cavemanbrawl.entities.pickupables.weapons.Claw;
-import com.pixelcross.cavemanbrawl.gfx.Assets;
 import com.pixelcross.cavemanbrawl.gfx.GameCamera;
 import com.pixelcross.cavemanbrawl.levels.Level;
 import com.pixelcross.cavemanbrawl.levels.tiles.Tile;
@@ -15,6 +12,11 @@ import com.pixelcross.cavemanbrawl.util.Vector;
 import javafx.scene.canvas.GraphicsContext;
 import javafx.scene.paint.Color;
 
+/**
+ * @author Justin Schreiber
+ *
+ * A raccoon enemy
+ */
 public class Raccoon extends Creature {
 
 	private Entity target;
@@ -22,9 +24,15 @@ public class Raccoon extends Creature {
 	private long attackStart; 
 	private double attackTime;
 	
+	/**
+	 * @param level
+	 * @param x
+	 * @param y
+	 */
 	public Raccoon(Level level, double x, double y) {
 		super(level, x, y, DEFAULT_CREATURE_WIDTH, DEFAULT_CREATURE_HEIGHT);
 		
+		//Initialize bounds for the raccoon
 		bounds.x = 8;
 		bounds.y = 24;
 		bounds.width = 48;
@@ -32,6 +40,8 @@ public class Raccoon extends Creature {
 		
 		speed = 5;
 		target = null;
+		
+		//Add a weapon slot with a claw weapon and an animation controller for it
 		WeaponSlot ws = new WeaponSlot(this, level);
 		ws.equip(new Claw(level));
 		components.add(ws);
@@ -59,22 +69,28 @@ public class Raccoon extends Creature {
 //		gc.strokeRect(x + bounds.x - camera.getxOffset(), y + bounds.y - camera.getyOffset(), bounds.width, bounds.height);
 	}
 
+	/**
+	 * Evaluate where the current target is an take specific actions
+	 */
 	private void evaluateTarget() {
 		if (target != null) {
+			//Get the distance to the target
 			Vector toTarget = getVectorTo(target.getCenterPos());
 			double dist = toTarget.getMagnitude();
+			//Check if the distance is less than 2 tiles and if true enter attacking state
 			if (dist < 2*Tile.TILEHEIGHT) {
 				if (!attacking) {
 					attacking = true;
 					attackStart = System.nanoTime();
 				}
-			} else if (dist < 8*Tile.TILEHEIGHT) {
+			} else if (dist < 8*Tile.TILEHEIGHT) { // Move towards the target if it is within 8 tiles
 				if (Math.sqrt(xMove*xMove + yMove*yMove) < speed) {
 					xMove += toTarget.getX()*(speed/3);
 					yMove += toTarget.getY()*(speed/3);
 				}
 			}
-			if (System.nanoTime() > attackStart + (long)(attackTime * 1000000000)) {
+			//Attack the target if it is within range and the delay has been passed
+			if (attacking && System.nanoTime() > attackStart + (long)(attackTime * 1000000000)) {
 				attacking = false;
 				if (dist < 2*Tile.TILEHEIGHT) {
 					try {

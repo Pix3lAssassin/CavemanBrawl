@@ -71,6 +71,9 @@ public class Assets {
 		loadRaccoon();
 	}
 	
+	/**
+	 * Load all of the raccoon assets
+	 */
 	private static void loadRaccoon() {
 		SpriteSheet raccoonSheet = new SpriteSheet(ImageLoader.loadImage("/textures/PixelRaccoon.png"));
 		raccoon_down = new Image[4];

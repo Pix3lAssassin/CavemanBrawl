@@ -52,6 +52,11 @@ public class Level {
 		return rooms[0].getPlayerSpawn();
 	}
 	
+	/**
+	 * Changes the room to the new room specified and generates it if necessary
+	 * 
+	 * @param roomId (The id of the new room)
+	 */
 	public void nextRoom(int roomId) {
 		int lastRoomId = currentRoom.getId();
 		currentRoom = rooms[roomId];
@@ -64,6 +69,10 @@ public class Level {
 		}
 	}
 	
+	/**
+	 * @param numOfRooms (The number of rooms to be generated)
+	 * @return the ids of the adjacent rooms for all rooms
+	 */
 	private int[][] generateLevel(int numOfRooms) {
 		ArrayList<Point> roomPositions = new ArrayList<Point>();
 		int[][] levelDoors = new int[numOfRooms][4];

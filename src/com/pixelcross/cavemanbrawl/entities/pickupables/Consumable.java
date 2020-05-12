@@ -13,6 +13,11 @@ public abstract class Consumable extends Pickupables {
 		super(level, x, y, width, height);
 	}
 	
+	/**
+	 * Consumes this Consumable
+	 * 
+	 * @param entity (The entity that will consume this consumable)
+	 */
 	public abstract void consume(Creature entity);	
 	
 }
