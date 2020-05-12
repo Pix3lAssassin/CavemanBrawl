@@ -1,4 +1,4 @@
-package com.pixelcross.cavemanbrawl.main;
+package com.pixelcross.cavemanbrawl.util;
 
 /**
  * @author Justin Schreiber

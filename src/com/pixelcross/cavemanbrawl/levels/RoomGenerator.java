@@ -24,6 +24,7 @@ public class RoomGenerator {
 	private int width, height;
 	private int[][] foreground, spawns, entities, spawnableArea;
 	private List<Point> availableSpawns;
+	private Point playerSpawn;
 	
 	/**
 	 * Creates a room generator using the map made by the MapGenerator
@@ -93,6 +94,8 @@ public class RoomGenerator {
 	 */
 	public int[][] generateSpawns(boolean[] doors) {
 		findPlayerSpawn(doors);
+		updateAvailableSpawns(doors);
+		randomEnemySpawns(5);
 		return spawns;
 	}
 	
@@ -102,6 +105,16 @@ public class RoomGenerator {
 	private void randomPlayerSpawn() {
 		Point spawn = availableSpawns.get((int)(Math.random()*availableSpawns.size()));
 		spawns[spawn.x][spawn.y] = 1;
+	}
+	
+	/**
+	 * Adds random spawn points for enemies
+	 */
+	private void randomEnemySpawns(int numberOfEnemies) {
+		for (int i = 0; i < numberOfEnemies; i++) {
+			Point spawn = availableSpawns.get((int)(Math.random()*availableSpawns.size()));
+			spawns[spawn.x][spawn.y] = 2;
+		}
 	}
 	
 	
@@ -126,9 +139,9 @@ public class RoomGenerator {
 		}
 		Point[] doorArray = new Point[doorPoints.size()];
 		doorPoints.toArray(doorArray);
-		Point spawn = findFarthestSpawn(doorArray);
-		if (spawn != null) {
-			spawns[spawn.x][spawn.y] = 1;
+		playerSpawn = findFarthestSpawn(doorArray);
+		if (playerSpawn != null) {
+			spawns[playerSpawn.x][playerSpawn.y] = 1;
 			for (Point p : doorPoints) {
 				spawns[p.x][p.y] = -1;
 			}
@@ -160,8 +173,8 @@ public class RoomGenerator {
 			tiles.add(tile);
 		
 			if (currentStep < distance || distance < 1) {
-				for (int x = tile.x + adjustments[0].x; x <= tile.x + adjustments[0].x; x++) {
-					for (int y = tile.y + adjustments[0].y; y <= tile.y + adjustments[0].y; y++) {
+				for (int x = tile.x + adjustments[0].x; x <= tile.x + adjustments[1].x; x++) {
+					for (int y = tile.y + adjustments[0].y; y <= tile.y + adjustments[1].y; y++) {
 						if ((y == tile.y || x == tile.x) && isInMapRange(x, y) && mapFlags[x][y] == 0 && foreground[x][y] == tileType) {
 							mapFlags[x][y] = 1;
 							queue.add(new FloodPoint(x, y, currentStep+1));
@@ -275,4 +288,46 @@ public class RoomGenerator {
 		return wallCount;
 	}
 
+	private void updateAvailableSpawns(boolean[] doors) {
+		List<Point> invalidSpawnPoints = new ArrayList<Point>();
+		List<Point> additionalPoints;
+		if (doors[0]) {
+			additionalPoints = floodFill(15, -1, new Point(width/2, 0));
+			for (Point p : additionalPoints) {
+				invalidSpawnPoints.add(p);
+			}
+		}
+		if (doors[1]) {
+			additionalPoints = floodFill(15, -1, new Point(width-1, height/2));
+			for (Point p : additionalPoints) {
+				invalidSpawnPoints.add(p);
+			}
+		}
+		if (doors[2]) {
+			additionalPoints = floodFill(15, -1, new Point(width/2, height-1));
+			for (Point p : additionalPoints) {
+				invalidSpawnPoints.add(p);
+			}
+		}
+		if (doors[3]) {
+			additionalPoints = floodFill(15, -1, new Point(0, height/2));
+			for (Point p : additionalPoints) {
+				invalidSpawnPoints.add(p);
+			}
+		}
+		if (playerSpawn != null) {
+			additionalPoints = floodFill(25, -1, playerSpawn);
+			for (Point p : additionalPoints) {
+				invalidSpawnPoints.add(p);
+			}
+		}
+		for (Point invalidPoint : invalidSpawnPoints) {
+			for (Point spawnablePoint : availableSpawns) {
+				if (invalidPoint.equals(spawnablePoint)) {
+					availableSpawns.remove(spawnablePoint);
+					break;
+				}
+			}
+		}
+	}
 }
