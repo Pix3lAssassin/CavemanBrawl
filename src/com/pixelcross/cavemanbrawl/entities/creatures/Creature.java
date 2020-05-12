@@ -21,7 +21,6 @@ public abstract class Creature extends Entity {
 	protected int health;
 	protected double speed;
 	protected double xMove, yMove;
-	protected Level currentLevel;
 
 	/**
 	 * Defines a creature that can move around in the world with limited health
@@ -33,12 +32,11 @@ public abstract class Creature extends Entity {
 	 * @param height (The height of the Creature)
 	 */
 	public Creature(Level level, double x, double y, int width, int height) {
-		super(x, y, width, height);
+		super(level, x, y, width, height);
 		health = DEFAULT_HEALTH;
 		speed = DEFAULT_SPEED;
 		xMove = 0;
 		yMove = 0;
-		currentLevel = level;
 	}
 
 	/**
@@ -140,6 +138,20 @@ public abstract class Creature extends Entity {
 	 */
 	public void setHealth(int health) {
 		this.health = health;
+	}
+
+	/**
+	 * @param amount
+	 */
+	public void doDamage(int amount) {
+		this.health -= amount;
+	}
+
+	/**
+	 * @param amount
+	 */
+	public void addHealth(int amount) {
+		this.health += amount;
 	}
 
 	/**

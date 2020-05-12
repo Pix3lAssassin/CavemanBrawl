@@ -4,6 +4,7 @@ import java.util.ArrayList;
 import java.util.List;
 
 import com.pixelcross.cavemanbrawl.entities.Entity;
+import com.pixelcross.cavemanbrawl.levels.Level;
 
 /**
  * @author Colin Kugler
@@ -13,8 +14,8 @@ public abstract class Pickupables extends Entity {
 
 	protected boolean isPickupable; // check to see if the item is able to be picked up.
 
-	public Pickupables(double x, double y, int width, int height) {
-		super(x, y, width, height); // dimensions of Pickupable object
+	public Pickupables(Level level, double x, double y, int width, int height) {
+		super(level, x, y, width, height); // dimensions of Pickupable object
 		// this.bounds = new Rectangle(0,0,width,height);
 		isPickupable = true;
 		bounds.x = 12;

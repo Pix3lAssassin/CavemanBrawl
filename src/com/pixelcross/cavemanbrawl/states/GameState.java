@@ -11,6 +11,9 @@ import com.pixelcross.cavemanbrawl.main.CavemanBrawlApp;
 
 import javafx.scene.Parent;
 import javafx.scene.canvas.GraphicsContext;
+import javafx.scene.paint.Color;
+import javafx.scene.text.Font;
+import javafx.scene.text.FontWeight;
 
 /**
  * @author Justin Schreiber
@@ -48,8 +51,24 @@ public class GameState extends State {
 	public void render(GraphicsContext gc, double interpolation) {
 		level.render(gc, interpolation, camera);
 		player.render(gc, interpolation, camera);
+		renderUI(gc);
 	}
 
+	private void renderUI(GraphicsContext gc) {
+		gc.setFill( Color.BLACK );
+	    Font theFont = Font.font( "Times New Roman", FontWeight.BOLD, 24 );
+	    gc.setFont( theFont );
+	    gc.fillText( "Health:", 10, 28 );
+	    
+		gc.setFill( Color.GRAY );
+	    gc.fillRect(92, 10, 100, 24);
+		gc.setFill( Color.RED );
+	    gc.fillRect(92, 10, player.getHealth(), 24);
+		gc.setStroke( Color.BLACK );
+		gc.setLineWidth(4);
+	    gc.strokeRect(92, 10, 100, 24);
+	}
+	
 	public Level getLevel() {
 		return level;
 	}

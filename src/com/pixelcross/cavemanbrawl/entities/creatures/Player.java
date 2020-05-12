@@ -2,8 +2,10 @@ package com.pixelcross.cavemanbrawl.entities.creatures;
 
 import java.awt.Point;
 import java.util.ArrayList;
+import java.util.List;
 
 import com.pixelcross.cavemanbrawl.components.PlayerAnimationController;
+import com.pixelcross.cavemanbrawl.entities.Entity;
 import com.pixelcross.cavemanbrawl.entities.LevelListener;
 import com.pixelcross.cavemanbrawl.entities.Trigger;
 import com.pixelcross.cavemanbrawl.gfx.Assets;
@@ -40,9 +42,18 @@ public class Player extends Creature implements LevelListener {
 		bounds.width = 32;
 		bounds.height = 40;
 		
+		health = 100;
+		
 		this.input = input;
 		PlayerAnimationController playerAnimation = new PlayerAnimationController(this);
 		components.add(playerAnimation);
+		List<Entity> entities = currentLevel.getCurrentRoom().getEntities();
+		for (Entity e : entities) {
+			try {
+				Raccoon r = (Raccoon) e;
+				r.setTarget(this);
+			} catch(ClassCastException cce) {}
+		}
 	}
 
 	/* (non-Javadoc)
@@ -86,14 +97,16 @@ public class Player extends Creature implements LevelListener {
 	 */
 	private void getInput() {
 		double speedChange = speed/3;
-		if(input.contains("UP") && Math.abs(yMove) < speed)
-			yMove -= speedChange;
-		if(input.contains("DOWN") && Math.abs(yMove) < speed)
-			yMove += speedChange;
-		if(input.contains("LEFT") && Math.abs(xMove) < speed)
-			xMove -= speedChange;
-		if(input.contains("RIGHT") && Math.abs(xMove) < speed)
-			xMove += speedChange;	
+		if (Math.sqrt(xMove*xMove + yMove*yMove) < speed) {
+			if(input.contains("UP"))
+				yMove -= speedChange;
+			if(input.contains("DOWN"))
+				yMove += speedChange;
+			if(input.contains("LEFT"))
+				xMove -= speedChange;
+			if(input.contains("RIGHT"))
+				xMove += speedChange;	
+		}
 	}
 	
 	/* (non-Javadoc)
@@ -118,5 +131,12 @@ public class Player extends Creature implements LevelListener {
 		xMove = 0;
 		yMove = 0;
 		setPos(startingPoint.x, startingPoint.y);
+		List<Entity> entities = currentLevel.getCurrentRoom().getEntities();
+		for (Entity e : entities) {
+			try {
+				Raccoon r = (Raccoon) e;
+				r.setTarget(this);
+			} catch(ClassCastException cce) {}
+		}
 	}
 }

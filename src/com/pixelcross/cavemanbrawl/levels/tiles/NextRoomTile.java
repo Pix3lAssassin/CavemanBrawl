@@ -15,7 +15,7 @@ public class NextRoomTile extends Tile implements Trigger {
 	private int roomId;
 	
 	public NextRoomTile(Level currentLevel, int roomId) {
-		super(Assets.player, 0);
+		super(null, 0);
 		this.currentLevel = currentLevel;
 		this.roomId = roomId;
 	}

@@ -1,11 +1,14 @@
 package com.pixelcross.cavemanbrawl.entities;
 
 import java.awt.Rectangle;
+import java.awt.geom.Point2D;
 import java.util.ArrayList;
 import java.util.List;
 
 import com.pixelcross.cavemanbrawl.components.Component;
 import com.pixelcross.cavemanbrawl.gfx.GameCamera;
+import com.pixelcross.cavemanbrawl.levels.Level;
+import com.pixelcross.cavemanbrawl.util.Vector;
 
 import javafx.scene.canvas.GraphicsContext;
 
@@ -21,6 +24,7 @@ public abstract class Entity {
 	protected double x, y;
 	protected int width, height;
 	protected Rectangle bounds;
+	protected Level currentLevel;
 	protected List<Component> components;
 	
 	/**
@@ -32,13 +36,14 @@ public abstract class Entity {
 	 * @param height (The height of the Entity)
 	 * 
 	 */
-	public Entity(double x, double y, int width, int height) {
+	public Entity(Level level, double x, double y, int width, int height) {
 		this.x = x;
 		this.y = y;
 		this.width = width;
 		this.height = height;
 		
 		bounds = new Rectangle(0, 0, width, height);
+		currentLevel = level;
 		components = new ArrayList<Component>();
 	}
 
@@ -153,5 +158,19 @@ public abstract class Entity {
 	 * @param camera
 	 */
 	public abstract void render(GraphicsContext gc, double interpolation, GameCamera camera);
+
+	public Rectangle getBounds() {
+		return bounds;
+	}
 	
+	public Vector getVectorTo(Point2D.Double coords) {
+		Point2D.Double localCoords = getCenterPos();
+		double distX = coords.x - localCoords.x;
+		double distY = coords.y - localCoords.y;
+		return new Vector(distX, distY);
+	}
+	
+	public Point2D.Double getCenterPos() {
+		return new Point2D.Double(x + bounds.x + bounds.width/2, y + bounds.y + bounds.height/2);
+	}
 }
